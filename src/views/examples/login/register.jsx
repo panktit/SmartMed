@@ -4,8 +4,6 @@ import { Button } from "reactstrap";
 import loginImg from "../../../assets/img/login.png";
 import history from "../../../history.js";
 import axios from 'axios';
-import bcrypt from 'bcryptjs';
-// const bcrypt = require('bcrypt');
 
 const initialState = {
   first_name: "",
@@ -86,7 +84,8 @@ export class Register extends React.Component {
 
     return true;
   };
-  
+
+ 
   handleSubmit = event => {
     event.preventDefault();
     const isValid = this.validate();
@@ -94,43 +93,29 @@ export class Register extends React.Component {
       this.setState(initialState);
       // save the entry in database
       if(this.state.userType === "doctor") {
-        console.log(this.state.password);
-        let hashedPassword="";
-        bcrypt.hash(this.state.password, 10, function(err, hash) {
-          hashedPassword=hash;
-        });
-        console.log("Hashed PW: ", hashedPassword);
-        const { first_name, last_name, email, password, userType, qualification, specialization, license} = this.state;
-        axios.post('/api/user', { first_name: this.state.first_name, 
-                                  last_name: this.state.last_name, 
-                                  email: this.state.email, 
-                                  password: hashedPassword,
-                                  userType: this.state.userType,
-                                  qualification: this.state.qualification, 
-                                  specialization: this.state.specialization, 
-                                  license: this.state.license })
+        axios.post('http://localhost:4000/api/user/signup', { first_name: this.state.first_name, 
+          last_name: this.state.last_name, 
+          email: this.state.email, 
+          password: this.state.password,
+          userType: this.state.userType,
+          qualification: this.state.qualification, 
+          specialization: this.state.specialization, 
+          license: this.state.license })
         .then((result) => {
           console.log(result);
           history.push("/index")
         });
-        
       } else if(this.state.userType === "patient") {
-        bcrypt.hash(this.state.password, 10, function(err, hash) {
-          // this.setState({
-          //   password: hash
-          // });
-          const { first_name, last_name, email, password, userType, age, blood_group} = this.state;
-          axios.post('/api/user', { first_name, 
-                                    last_name, 
-                                    email, 
-                                    password, 
-                                    userType,
-                                    age, 
-                                    blood_group })
-          .then((result) => {
-            console.log(result);
-            history.push("/index")
-          });
+        axios.post('http://localhost:4000/api/user/signup', { first_name: this.state.first_name, 
+          last_name: this.state.last_name, 
+          email: this.state.email, 
+          password: this.state.password,
+          userType: this.state.userType,
+          age: this.state.age, 
+          blood_group: this.state.blood_group })
+        .then((result) => {
+          console.log(result);
+          history.push("/index")
         });
       }
     }

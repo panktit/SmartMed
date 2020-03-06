@@ -14,25 +14,25 @@ var dashRoutes = [
   
   {
     path: "/view",
-    name: "View Records",
+    name: "View Patients",
     icon: "files_paper",
     component: RecordList,
     layout: "/doctor"
-  },
-  {
-    path: "/update",
-    name: "Update Records",
-    icon: "design-2_ruler-pencil",
-    component: Update,
-    layout: "/doctor"
-  },
-  {
-    pro: true,
-    path: "/upgrade",
-    name: "Upgrade to PRO",
-    icon: "objects_spaceship",
-    component: Upgrade,
-    layout: "/doctor"
   }
+  // {
+  //   path: "/update",
+  //   name: "Update Records",
+  //   icon: "design-2_ruler-pencil",
+  //   component: Update,
+  //   layout: "/doctor"
+  // },
+  // {
+  //   pro: true,
+  //   path: "/upgrade",
+  //   name: "Upgrade to PRO",
+  //   icon: "objects_spaceship",
+  //   component: Upgrade,
+  //   layout: "/doctor"
+  // }
 ];
 export default dashRoutes;

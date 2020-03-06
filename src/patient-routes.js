@@ -26,13 +26,13 @@ var dashRoutes = [
     component: Update,
     layout: "/patient"
   },
-  {
-    pro: true,
-    path: "/upgrade",
-    name: "Upgrade to PRO",
-    icon: "objects_spaceship",
-    component: Upgrade,
-    layout: "/patient"
-  }
+  // {
+  //   pro: true,
+  //   path: "/upgrade",
+  //   name: "Upgrade to PRO",
+  //   icon: "objects_spaceship",
+  //   component: Upgrade,
+  //   layout: "/patient"
+  // }
 ];
 export default dashRoutes;
