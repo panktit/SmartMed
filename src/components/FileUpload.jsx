@@ -7,11 +7,10 @@ const ipfsClient = require('ipfs-http-client')
 const ipfs = ipfsClient({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' }) // leaving out the arguments will default to these values
 let medicalHistory = [];
 
-class App extends Component {
+class FileUpload extends Component {
 
   async componentWillMount() {
     await this.loadWeb3()
-    await this.loadBlockchainData()
   }
 
   async loadWeb3() {
@@ -27,29 +26,10 @@ class App extends Component {
     }
   }
 
-  async loadBlockchainData() {
-    const web3 = window.web3
-    // Load account
-    const accounts = await web3.eth.getAccounts()
-    this.setState({ account: accounts[0] })
-    const networkId = await web3.eth.net.getId()
-    const networkData = Store.networks[networkId]
-    if(networkData) {
-      const contract = web3.eth.Contract(Store.abi, networkData.address)
-      this.setState({ contract })
-      medicalHistory = await contract.methods.get().call()
-      this.setState({ medicalHistory })
-      console.log("Medical History: ", medicalHistory);
-    } else {
-      window.alert('Smart contract not deployed to detected network.')
-    }
-  }
-
   constructor(props) {
     super(props)
 
     this.state = {
-      fileHash: '',
       contract: null,
       web3: null,
       buffer: null,
@@ -98,14 +78,6 @@ class App extends Component {
                   <Button type='submit' color='info' size='sm' > Submit </Button>
                 </form>
                 <p>&nbsp;</p>
-                <h5>Previously Uploaded</h5>
-                <p>&nbsp;</p>
-                <a
-                  href="#" target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img src={`https://ipfs.infura.io/ipfs/${this.state.fileHash}`} />
-                </a>
               </div>
             </main>
           </div>
@@ -115,4 +87,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default FileUpload;

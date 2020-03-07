@@ -154,7 +154,7 @@ class Header extends React.Component {
             </form>
             <Nav navbar>
               <NavItem>
-                <Link to="/doctor" className="nav-link">
+                <Link to="/loginIndex" className="nav-link">
                   Back
                   
                   <p>

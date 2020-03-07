@@ -14,6 +14,7 @@ import * as serviceWorker from "./registerServiceWorker";
 
 // pages for this kit
 import Index from "./views/Index.js";
+import LoginIndex from "./views/LoginIndex.js";
 import NucleoIcons from "./views/NucleoIcons.js";
 import LoginPage from "./views/examples/Login.js";
 import SignupPage from "./views/examples/Signup.js";
@@ -30,6 +31,7 @@ ReactDOM.render(
     <Switch>
       <Switch>
         <Route path="/index" render={props => <Index {...props} />} />
+        <Route path="/loginIndex" render={props => <LoginIndex {...props} />} />
         <Route
           path="/nucleo-icons"
           render={props => <NucleoIcons {...props} />}

@@ -4,21 +4,21 @@ import UserPage from "./views/profile-sections/PatientUserpage.jsx";
 
 var dashRoutes = [
   {
-    path: "/profile",
+    path: "/profile/:id",
     name: "My Profile",
     icon: "users_single-02",
     component: UserPage,
     layout: "/patient"
   },
   {
-    path: "/view",
+    path: "/view/:id",
     name: "View Records",
     icon: "files_paper",
     component: RecordList,
     layout: "/patient"
   },
   {
-    path: "/upload",
+    path: "/upload/:id",
     name: "Upload Records",
     icon: "arrows-1_cloud-upload-94",
     component: Update,

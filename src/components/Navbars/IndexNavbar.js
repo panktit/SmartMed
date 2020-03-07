@@ -92,7 +92,7 @@ function IndexNavbar() {
                   <p>About Us</p>
                 </NavLink>
               </NavItem>
-              <UncontrolledDropdown nav>
+              {/* <UncontrolledDropdown nav>
                 <DropdownToggle
                   caret
                   color="default"
@@ -116,7 +116,7 @@ function IndexNavbar() {
                     For Patients
                   </DropdownItem>
                 </DropdownMenu>
-              </UncontrolledDropdown>
+              </UncontrolledDropdown> */}
               <NavItem>
                 <NavLink
                   href="#pablo"

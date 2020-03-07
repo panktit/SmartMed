@@ -64,21 +64,30 @@ router.get('/', function(req, res, next) {
   });
 });
 
-/* GET SINGLE USER BY ID */
-// router.get('/:id', function(req, res, next) {
-//   User.findById(req.params.id, function (err, post) {
-//     if (err) return next(err);
-//     res.json(post);
-//   });
-// });
 
-/* GET SINGLE USER BY EMAIL */
-router.get('/:id', function(req, res, next) {
-  User.find({"email": req.params.id}, function (err, user) {
+/* GET ALL PATIENTS */
+router.get('/patients', function(req, res, next) {
+  User.find({"userType": "patient"},function (err, users) {
     if (err) return next(err);
-    res.json(user);
+    res.json(users);
   });
 });
+
+/* GET SINGLE USER BY ID */
+router.get('/:id', function(req, res, next) {
+  User.findById(req.params.id, function (err, post) {
+    if (err) return next(err);
+    res.json(post);
+  });
+});
+
+/* GET SINGLE USER BY EMAIL */
+// router.get('/:id', function(req, res, next) {
+//   User.find({"email": req.params.id}, function (err, user) {
+//     if (err) return next(err);
+//     res.json(user);
+//   });
+// });
 
 /* SAVE USER */
 router.post('/', function(req, res, next) {

@@ -1,4 +1,6 @@
 import React from "react";
+import {Link} from "react-router-dom";
+import axios from "axios";
 
 // reactstrap components
 import {
@@ -14,9 +16,22 @@ import {
 // core components
 import PanelHeader from "../../components/PanelHeader/PanelHeader.jsx";
 
-import { thead, tbody } from "../../variables/general";
+class DoctorTableList extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      patientList: [{ }]
+    }
+  }
 
-class RegularTables extends React.Component {
+  componentDidMount() {
+    console.log(this.props);
+    axios.get('http://localhost:4000/api/user/patients')
+      .then(res => {
+        this.setState({ patientList: res.data });
+      });
+  }
+
   render() {
     return (
       <>
@@ -26,39 +41,29 @@ class RegularTables extends React.Component {
             <Col xs={12}>
               <Card>
                 <CardHeader>
-                  <CardTitle tag="h4">Simple Table</CardTitle>
+                  <CardTitle tag="h4">Patient List</CardTitle>
                 </CardHeader>
                 <CardBody>
                   <Table responsive>
                     <thead className="text-primary">
                       <tr>
-                        {thead.map((prop, key) => {
-                          if (key === thead.length - 1)
-                            return (
-                              <th key={key} className="text-right">
-                                {prop}
-                              </th>
-                            );
-                          return <th key={key}>{prop}</th>;
-                        })}
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Age</th>
+                        <th>Blood Group</th>
+                        <th>Records</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {tbody.map((prop, key) => {
-                        return (
-                          <tr key={key}>
-                            {prop.data.map((prop, key) => {
-                              if (key === thead.length - 1)
-                                return (
-                                  <td key={key} className="text-right">
-                                    {prop}
-                                  </td>
-                                );
-                              return <td key={key}>{prop}</td>;
-                            })}
-                          </tr>
-                        );
-                      })}
+                      {this.state.patientList.map(patient =>
+                        <tr>
+                          <td>{patient.first_name}</td>
+                          <td>{patient.last_name}</td>
+                          <td>{patient.age}</td>
+                          <td>{patient.blood_group}</td>
+                          <td><Link to="/patient/view/:id" style={{ color: '#007bff' }} className="nav-link">View</Link></td>
+                        </tr>
+                      )}
                     </tbody>
                   </Table>
                 </CardBody>
@@ -113,4 +118,4 @@ class RegularTables extends React.Component {
   }
 }
 
-export default RegularTables;
+export default DoctorTableList;

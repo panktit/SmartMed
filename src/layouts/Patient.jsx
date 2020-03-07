@@ -55,7 +55,7 @@ class Dashboard extends React.Component {
                 />
               );
             })}
-            <Redirect from="/patient" to="/patient/profile" />
+            <Redirect from="/patient" to="/patient/profile/:id" />
           </Switch>
           <DashboardFooter fluid />
         </div>
