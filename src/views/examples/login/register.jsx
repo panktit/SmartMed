@@ -102,8 +102,7 @@ export class Register extends React.Component {
           specialization: this.state.specialization, 
           license: this.state.license })
         .then((result) => {
-          console.log(result);
-          history.push("/index")
+          history.push("/")
         });
       } else if(this.state.userType === "patient") {
         axios.post('http://localhost:4000/api/user/signup', { first_name: this.state.first_name, 
@@ -114,8 +113,7 @@ export class Register extends React.Component {
           age: this.state.age, 
           blood_group: this.state.blood_group })
         .then((result) => {
-          console.log(result);
-          history.push("/index")
+          history.push("/")
         });
       }
     }

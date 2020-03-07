@@ -9,7 +9,7 @@ const initialState = {
   email: "",
   password: "",
   userType: "",
-  passwordError: "",
+  error: "",
 };
 
 export class Login extends React.Component {
@@ -28,23 +28,18 @@ export class Login extends React.Component {
   }; 
 
   handleSubmit = event => {
-
-    let emailError="";
-    let passwordError="";
-
     event.preventDefault();
-    console.log("State: ",this.state);
     axios.post('http://localhost:4000/api/user/login', {email: this.state.email, password: this.state.password})
     .then(res => {
-      console.log("Response: " ,res);
+      if('message' in res.data) {
+        this.setState({error: res.data.message});
+      } else { 
+        history.push(`/${res.data.userType}`);
+      }
     })
     .catch(error => {
       console.log(error);
     });
-   
-    if(emailError || passwordError) {
-      this.setState({emailError,passwordError});
-    }
   }
   
     render() {
@@ -59,11 +54,10 @@ export class Login extends React.Component {
             <div className="form">
               <div className="form-group">
                   <input type="text" name="email" placeholder="Email" value={this.state.email} onChange={this.handleChange} />
-                  <div style={{ fontSize: 12, color: "red" }}>{this.state.emailError}</div>
               </div>
               <div className="form-group">
                   <input type="password" name="password" placeholder="Password" value={this.state.password} onChange={this.handleChange} />
-                  <div style={{ fontSize: 12, color: "red" }}>{this.state.passwordError}</div>
+                  <div style={{ fontSize: 12, color: "red", alignSelf:"center" }}>{this.state.error}</div>
               </div>
             </div>
           </div>

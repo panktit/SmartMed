@@ -7,25 +7,19 @@ var User = require('../models/User.js');
 // User login api 
 router.post('/login', (req, res) => { 
   // Find user with requested email 
-  console.log(req.body.email);
-  console.log(req.body.password);
   User.findOne({ email : req.body.email }, function(err, user) { 
     if (user === null) { 
-      return res.status(400).send({ 
-        message : "User not found."
+      return res.send({ 
+        message : "User not found. Please register as a new user"
       }); 
     } 
+    else if (user.validPassword(req.body.password)) { 
+      return res.json(user); 
+    } 
     else { 
-      if (user.validPassword(req.body.password)) { 
-        return res.status(201).send({ 
-            message : "User Logged In", 
-        }); 
-      } 
-      else { 
-        return res.status(400).send({ 
-            message : "Wrong Password"
-        }); 
-      } 
+      return res.send({ 
+          message : "Incorrect Password"
+      }); 
     } 
   }); 
 }); 
@@ -36,34 +30,37 @@ router.post('/signup', (req, res, next) => {
 // Creating empty user object 
   let newUser = new User(); 
 
-  // Initialize newUser object with request data 
-  newUser.first_name = req.body.first_name, 
-  newUser.email = req.body.email 
+  // Initialize newUser object with request data
+  newUser.first_name = req.body.first_name,
+  newUser.last_name = req.body.last_name,
+  newUser.email = req.body.email,
+  newUser.userType = req.body.userType
+  
+  if(newUser.userType === "doctor") {
+    newUser.qualification = req.body.qualification,
+    newUser.specialization = req.body.specialization,
+    newUser.license = req.body.license
+  } else if(newUser.userType === "patient") {
+    newUser.age = req.body.age,
+    newUser.blood_group = req.body.blood_group
+  }
 
   // Call setPassword function to hash password 
   newUser.setPassword(req.body.password); 
 
   // Save newUser object to database 
-  newUser.save((err, User) => { 
-    if (err) { 
-      return res.status(400).send({ 
-        message : "Failed to add user."
-      }); 
-    } 
-    else { 
-      return res.status(201).send({ 
-        message : "User added successfully."
-      }); 
-    } 
+  User.create(newUser ,function(err, post) { 
+    if (err) return next(err); 
+    res.json(post);
   }); 
 }); 
 
 
 /* GET ALL USERS */
 router.get('/', function(req, res, next) {
-  User.find(function (err, products) {
+  User.find(function (err, users) {
     if (err) return next(err);
-    res.json(products);
+    res.json(users);
   });
 });
 
@@ -77,9 +74,9 @@ router.get('/', function(req, res, next) {
 
 /* GET SINGLE USER BY EMAIL */
 router.get('/:id', function(req, res, next) {
-  User.find({"email": req.params.id}, function (err, post) {
+  User.find({"email": req.params.id}, function (err, user) {
     if (err) return next(err);
-    res.json(post);
+    res.json(user);
   });
 });
 
