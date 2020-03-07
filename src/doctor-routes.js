@@ -1,6 +1,5 @@
-import Update from "./views/profile-sections/Typography.jsx";
+import Update from "./views/profile-sections/Upload.jsx";
 import RecordList from "./views/profile-sections/DoctorTableList.jsx";
-import Upgrade from "./views/profile-sections/Upgrade.jsx";
 import DoctorUserpage from "./views/profile-sections/DoctorUserpage.jsx";
 
 var dashRoutes = [

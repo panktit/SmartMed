@@ -2,11 +2,6 @@ import React from "react";
 
 // reactstrap components
 import {
-  Button,
-  Dropdown,
-  DropdownItem,
-  DropdownToggle,
-  DropdownMenu,
   Card,
   CardHeader,
   CardBody,

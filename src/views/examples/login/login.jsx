@@ -12,11 +12,7 @@ const initialState = {
   error: "",
 };
 
-export class Login extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-  
+export class Login extends React.Component { 
   state = initialState;
   handleChange = event => {
     const isCheckbox = event.target.type === "checkbox";

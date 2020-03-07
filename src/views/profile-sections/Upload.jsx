@@ -6,7 +6,7 @@ import { Card, CardHeader, CardBody, Row, Col } from "reactstrap";
 
 // core components
 import PanelHeader from "../../components/PanelHeader/PanelHeader.jsx";
-import App from '../../components/App';
+import FileUpload from '../../components/FileUpload';
 
 class Typography extends React.Component {
   render() {
@@ -21,7 +21,7 @@ class Typography extends React.Component {
                   <h5 className="title">Upload a new record</h5>
                 </CardHeader>
                 <CardBody>
-                  <App />
+                  <FileUpload />
                 </CardBody>
               </Card>
             </Col>

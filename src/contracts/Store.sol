@@ -1,13 +1,18 @@
 pragma solidity ^0.5.0;
+pragma experimental ABIEncoderV2;
 
 contract Store {
-  string fileHash;
+  string[] medicalHistory;
 
   function set(string memory _fileHash) public {
-    fileHash = _fileHash;
+    medicalHistory.push(_fileHash);
   }
 
-  function get() public view returns (string memory) {
-    return fileHash;
+  function get() public view returns (string[] memory) {
+    return medicalHistory;
+  }
+
+  function clear() public {
+    delete medicalHistory;
   }
 }

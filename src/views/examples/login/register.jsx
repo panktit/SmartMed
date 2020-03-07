@@ -33,9 +33,6 @@ const initialState = {
 };
 
 export class Register extends React.Component {
-  constructor(props) {
-    super(props);
-  }
   state = initialState;
   handleChange = event => {
     const isCheckbox = event.target.type === "checkbox";
@@ -158,24 +155,24 @@ export class Register extends React.Component {
             <div style={{ fontSize: 12, color: "red" }}>{this.state.userTypeError}</div>
             <br/>
             {/* conditional components for doctor */}
-            <div className="form-group"> {this.state.userType == "doctor" ? 
+            <div className="form-group"> {this.state.userType === "doctor" ? 
               <input type="text" name="qualification" placeholder="Qualification" value={this.state.qualification} onChange={this.handleChange} /> : "" }
             </div>
 
-            <div className="form-group"> {this.state.userType == "doctor" ? 
+            <div className="form-group"> {this.state.userType === "doctor" ? 
               <input type="text" name="specialization" placeholder="Specialization" value={this.state.specialization} onChange={this.handleChange} /> : "" }
             </div>
 
-            <div className="form-group"> {this.state.userType == "doctor" ? 
+            <div className="form-group"> {this.state.userType === "doctor" ? 
               <input type="text" name="license" placeholder="License" value={this.state.license} onChange={this.handleChange} /> : "" }
             </div>
 
             {/* conditional components for patient */}
-            <div className="form-group"> {this.state.userType == "patient" ? 
+            <div className="form-group"> {this.state.userType === "patient" ? 
               <input type="text" name="age" placeholder="Age" value={this.state.age} onChange={this.handleChange} /> : "" }
             </div>
 
-            <div className="form-group"> {this.state.userType == "patient" ? 
+            <div className="form-group"> {this.state.userType === "patient" ? 
               <input type="text" name="blood_group" placeholder="Blood Group" value={this.state.blood_group} onChange={this.handleChange} /> : "" }
             </div>
 

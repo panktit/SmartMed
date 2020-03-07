@@ -1,8 +1,6 @@
-import Update from "./views/profile-sections/Typography.jsx";
+import Update from "./views/profile-sections/Upload.jsx";
 import RecordList from "./views/profile-sections/PatientTableList.jsx";
-import Upgrade from "./views/profile-sections/Upgrade.jsx";
 import UserPage from "./views/profile-sections/PatientUserpage.jsx";
-import axios from "axios";
 
 var dashRoutes = [
   {

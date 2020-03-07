@@ -9,10 +9,6 @@ import ExamplesNavbar from "../../components/Navbars/ExamplesNavbar";
 
 class LoginPage extends React.Component {
 
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <>

@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import Web3 from 'web3';
-import './App.scss';
 import Store from '../abis/Store.json'
 import { Button } from 'reactstrap';
 
 const ipfsClient = require('ipfs-http-client')
 const ipfs = ipfsClient({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' }) // leaving out the arguments will default to these values
+let medicalHistory = [];
 
 class App extends Component {
 
@@ -37,8 +37,9 @@ class App extends Component {
     if(networkData) {
       const contract = web3.eth.Contract(Store.abi, networkData.address)
       this.setState({ contract })
-      const fileHash = await contract.methods.get().call()
-      this.setState({ fileHash })
+      medicalHistory = await contract.methods.get().call()
+      this.setState({ medicalHistory })
+      console.log("Medical History: ", medicalHistory);
     } else {
       window.alert('Smart contract not deployed to detected network.')
     }
@@ -52,13 +53,15 @@ class App extends Component {
       contract: null,
       web3: null,
       buffer: null,
-      account: null
+      account: null,
+      medicalHistory: []
     }
   }
 
   captureFile = (event) => {
     event.preventDefault()
     const file = event.target.files[0]
+    console.log(file);
     const reader = new window.FileReader()
     reader.readAsArrayBuffer(file)
     reader.onloadend = () => {
@@ -77,7 +80,8 @@ class App extends Component {
         return
       }
        this.state.contract.methods.set(result[0].hash).send({ from: this.state.account }).then((r) => {
-         return this.setState({ fileHash: result[0].hash })
+         medicalHistory.push(result[0].hash);
+         return this.setState({ medicalHistory})
        })
     })
   }
