@@ -8,4 +8,4 @@ var recordRoutes = [
     layout: "/record"
   }
   ];
-  export default recordRoutes;
+export default recordRoutes;

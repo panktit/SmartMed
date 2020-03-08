@@ -27,7 +27,7 @@ class User extends React.Component {
     }
 
     componentDidMount() {
-      console.log(this.props);
+      console.log("Props in Patient User Page: ", this.props);
       axios.get('http://localhost:4000/api/user/'+this.props.match.params.id)
         .then(res => {
           this.setState({ user: res.data });

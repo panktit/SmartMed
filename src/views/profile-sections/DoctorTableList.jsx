@@ -61,7 +61,7 @@ class DoctorTableList extends React.Component {
                           <td>{patient.last_name}</td>
                           <td>{patient.age}</td>
                           <td>{patient.blood_group}</td>
-                          <td><Link to="/patient/view/:id" style={{ color: '#007bff' }} className="nav-link">View</Link></td>
+                          <td><Link to="/patient/view" style={{ color: '#007bff' }} className="nav-link">View</Link></td>
                         </tr>
                       )}
                     </tbody>

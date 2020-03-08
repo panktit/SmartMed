@@ -8,9 +8,9 @@ import { Route, Switch, Redirect } from "react-router-dom";
 // core components
 import DashboardNavbar from "../components/Navbars/DashboardNavbar.jsx";
 import DashboardFooter from "../components/Footers/DashboardFooter.jsx";
-import Sidebar from "../components/Sidebar/Sidebar.jsx";
-
-import routes from "../doctor-routes.js";
+import Sidebar from "../components/Sidebar/DoctorSidebar.jsx";
+import PatientList from "../views/profile-sections/DoctorTableList.jsx";
+import UserPage from "../views/profile-sections/DoctorUserpage.jsx";
 
 var ps;
 
@@ -40,15 +40,11 @@ class Dashboard extends React.Component {
   render() {
     return (
       <div className="wrapper">
-        <Sidebar
-          {...this.props}
-          routes={routes}
-          backgroundColor={this.state.backgroundColor}
-        />
+        <Sidebar {...this.props} />
         <div className="main-panel" ref={this.mainPanel}>
           <DashboardNavbar {...this.props} />
           <Switch>
-            {routes.map((prop, key) => {
+            {/* {routes.map((prop, key) => {
               return (
                 <Route
                   path={prop.layout + prop.path}
@@ -56,7 +52,9 @@ class Dashboard extends React.Component {
                   key={key}
                 />
               );
-            })}
+            })} */}
+            <Route path="/doctor/profile" render={props => <UserPage {...props} />} />
+            <Route path="/doctor/view" render={props => <PatientList {...props} />} />
             <Redirect from="/doctor" to="/doctor/profile" />
           </Switch>
           <DashboardFooter fluid />

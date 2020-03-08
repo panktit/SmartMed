@@ -19,6 +19,7 @@ class Sidebar extends React.Component {
     return this.props.location.pathname.indexOf(routeName) > -1 ? "active" : "";
   }
   componentDidMount() {
+    console.log("Sidebar props: ", this.props);
     if (navigator.platform.indexOf("Win") > -1) {
       ps = new PerfectScrollbar(this.refs.sidebar, {
         suppressScrollX: true,
@@ -33,19 +34,18 @@ class Sidebar extends React.Component {
   }
   render() {
     return (
-      <div className="sidebar" data-color={this.props.backgroundColor}>
+      <div className="sidebar" data-color="blue">
         <div className="logo">
           <a
-            href="https://www.creative-tim.com?ref=nudr-sidebar"
+            href="#"
             className="simple-text logo-mini"
-            target="_blank"
           >
             <div className="logo-img">
               <img src={logo} alt="smartmed-logo" />
             </div>
           </a>
           <a
-            href="https://www.creative-tim.com?ref=nudr-sidebar"
+            href="#"
             className="simple-text logo-normal"
             target="_blank"
           >
@@ -54,27 +54,33 @@ class Sidebar extends React.Component {
         </div>
         <div className="sidebar-wrapper" ref="sidebar">
           <Nav>
-            {this.props.routes.map((prop, key) => {
-              if (prop.redirect) return null;
-              return (
                 <li
                   className={
-                    this.activeRoute(prop.layout + prop.path) +
-                    (prop.pro ? " active active-pro" : "")
-                  }
-                  key={key}
+                    this.activeRoute("/doctor/profile")}
                 >
                   <NavLink
-                    to={prop.layout + prop.path}
+                    to="/doctor/profile"
                     className="nav-link"
                     activeClassName="active"
                   >
-                    <i className={"now-ui-icons " + prop.icon} />
-                    <p>{prop.name}</p>
+                    <i className="now-ui-icons users_single-02" />
+                    <p>My Profile</p>
                   </NavLink>
                 </li>
-              );
-            })}
+
+                <li
+                  className={
+                    this.activeRoute("/doctor/view")}
+                >
+                  <NavLink
+                    to="/doctor/view"
+                    className="nav-link"
+                    activeClassName="active"
+                  >
+                    <i className="now-ui-icons files_paper" />
+                    <p>View Patients</p>
+                  </NavLink>
+                </li>
           </Nav>
         </div>
       </div>

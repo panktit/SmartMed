@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { Button } from "reactstrap";
 import loginImg from "../../../assets/img/login.png";
 import history from "../../../history.js";
@@ -30,7 +30,10 @@ export class Login extends React.Component {
       if('message' in res.data) {
         this.setState({error: res.data.message});
       } else { 
-        history.push(`/${res.data.userType}/profile/${res.data._id}`);
+        history.push({
+          pathname:`/${res.data.userType}`,
+          state: res.data
+        });
       }
     })
     .catch(error => {
@@ -71,3 +74,5 @@ export class Login extends React.Component {
     );
   }
 }
+
+export default withRouter(Login);

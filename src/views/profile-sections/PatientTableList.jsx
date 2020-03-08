@@ -48,7 +48,7 @@ class PatientTableList extends React.Component {
     if(networkData) {
       const contract = web3.eth.Contract(Store.abi, networkData.address)
       this.setState({ contract })
-      medicalHistory = await contract.methods.get().call()
+      medicalHistory = await contract.methods.get("5e636fbb211ade1ab0adb294").call()
       this.setState({ medicalHistory })
       console.log("Medical History: ", medicalHistory);
     } else {
@@ -58,6 +58,7 @@ class PatientTableList extends React.Component {
 
   constructor(props) {
     super(props)
+    console.log("View props: ", this.props);
     this.state = {
       contract: null,
       web3: null,
@@ -81,15 +82,15 @@ class PatientTableList extends React.Component {
                   <Table responsive>
                     <thead className="text-primary">
                       <tr>
-                        <th>Hash</th>
-                        <th>Date</th>
+                        <th>Name</th>
+                        <th>Uploaded On</th>
                       </tr>
                     </thead>
                     <tbody>
                       {this.state.medicalHistory.map(record =>
                         <tr>
-                          <td><a style={{ color: '#007bff' }}href={'https://ipfs.infura.io/ipfs/'+record} target="_blank">{record} </a></td>
-                          <td></td>
+                          <td><a style={{ color: '#007bff' }}href={'https://ipfs.infura.io/ipfs/'+record.fileHash} target="_blank">{record.fileName} </a></td>
+                          <td>{record.date}</td>
                         </tr>
                       )}
                     </tbody>

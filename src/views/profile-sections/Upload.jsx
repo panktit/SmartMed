@@ -8,7 +8,7 @@ import { Card, CardHeader, CardBody, Row, Col } from "reactstrap";
 import PanelHeader from "../../components/PanelHeader/PanelHeader.jsx";
 import FileUpload from '../../components/FileUpload';
 
-class Typography extends React.Component {
+class Upload extends React.Component {
   render() {
     return (
       <>
@@ -32,4 +32,4 @@ class Typography extends React.Component {
   }
 }
 
-export default Typography;
+export default Upload;

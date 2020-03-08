@@ -8,7 +8,7 @@ import { Route, Switch, Redirect } from "react-router-dom";
 // core components
 import DashboardNavbar from "../components/Navbars/DashboardNavbar.jsx";
 import DashboardFooter from "../components/Footers/DashboardFooter.jsx";
-import Sidebar from "../components/Sidebar/Sidebar.jsx";
+import Sidebar from "../components/Sidebar/DoctorSidebar.jsx";
 import routes from "../record-routes.js";
 var ps;
 

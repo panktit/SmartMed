@@ -20,6 +20,7 @@
     "chai-bignumber": "3.0.0",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
+    "dateformat": "^3.0.3",
     "express": "^4.17.1",
     "html": "^1.0.0",
     "ipfs-http-client": "^33.1.1",
