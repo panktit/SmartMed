@@ -8,18 +8,21 @@ import PerfectScrollbar from "perfect-scrollbar";
 import logo from "../../assets/img/tsmfavicon.png";
 
 var ps;
+let patientState = {};
 
 class Sidebar extends React.Component {
   constructor(props) {
     super(props);
-    this.activeRoute.bind(this);
+    this.activeRoute.bind(this); 
   }
   // verifies if routeName is the one active (in browser input)
   activeRoute(routeName) {
     return this.props.location.pathname.indexOf(routeName) > -1 ? "active" : "";
   }
   componentDidMount() {
-    console.log("Sidebar props: ", this.props);
+    console.log("Patient Sidebar props: ", this.props);
+    patientState = this.props.location.state;
+    console.log("Patient State Sidebar props: ", patientState);
     if (navigator.platform.indexOf("Win") > -1) {
       ps = new PerfectScrollbar(this.refs.sidebar, {
         suppressScrollX: true,
@@ -58,8 +61,9 @@ class Sidebar extends React.Component {
                   className={
                     this.activeRoute("/patient/profile")}
                 >
-                  <NavLink
-                    to="/patient/profile"
+                  {/* <NavLink {...props} isActive={(match, location) => location.pathname.startsWith(props.to.pathname)}/> */}
+                  <NavLink {...this.props}
+                    to={'/patient/profile/'+patientState._id}
                     className="nav-link"
                     activeClassName="active"
                   >
@@ -72,8 +76,8 @@ class Sidebar extends React.Component {
                   className={
                     this.activeRoute("/patient/view")}
                 >
-                  <NavLink
-                    to="/patient/view"
+                  <NavLink {...this.props}
+                    to={'/patient/view/'+patientState._id}
                     className="nav-link"
                     activeClassName="active"
                   >
@@ -86,8 +90,8 @@ class Sidebar extends React.Component {
                   className={
                     this.activeRoute("/patient/upload")}
                 >
-                  <NavLink
-                    to="/patient/upload"
+                  <NavLink {...this.props}
+                    to={'/patient/upload/'+patientState._id}
                     className="nav-link"
                     activeClassName="active"
                   >

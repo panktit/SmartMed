@@ -16,23 +16,25 @@ import {
 // core components
 import PanelHeader from "../../components/PanelHeader/PanelHeader.jsx";
 
+let patientID = "";
+
 class User extends React.Component {
 
     constructor(props) {
-        super(props);
-        // this.state = {value: 'select'};
-        this.state = {
-          user: {}
-        };
+      super(props);
+      this.state = {
+        user: {}
+      }
     }
 
     componentDidMount() {
       console.log("Props in Patient User Page: ", this.props);
-      axios.get('http://localhost:4000/api/user/'+this.props.match.params.id)
+      patientID = this.props.match.params.id;
+      axios.get('http://localhost:4000/api/user/'+patientID)
         .then(res => {
           this.setState({ user: res.data });
-          console.log(this.state.user);
-        });
+          console.log("User state in Patient user page: " ,this.state.user);
+      });
     }
       
   render() {
@@ -75,7 +77,6 @@ class User extends React.Component {
                           <label>First Name</label>
                           <Input
                             defaultValue={this.state.user.first_name}
-                            placeholder="Company"
                             type="text"
                             disabled
                           />

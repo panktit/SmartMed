@@ -8,6 +8,7 @@ const ipfsClient = require('ipfs-http-client')
 const ipfs = ipfsClient({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' }) // leaving out the arguments will default to these values
 let file = "";
 let count = "";
+let userId = "";
 
 class FileUpload extends Component {
 
@@ -31,15 +32,18 @@ class FileUpload extends Component {
 
   async loadBlockchainData() {
     const web3 = window.web3
+    // Load userId
+    this.setState({userId});
     // Load account
     const accounts = await web3.eth.getAccounts()
+    console.log("User id: ", this.state.userId);
     this.setState({ account: accounts[0] })
     const networkId = await web3.eth.net.getId()
     const networkData = Store.networks[networkId]
     if(networkData) {
       const contract = web3.eth.Contract(Store.abi, networkData.address)
       this.setState({ contract })
-      count = await this.state.contract.methods.getCount("5e636fbb211ade1ab0adb294").call()
+      count = await this.state.contract.methods.getCount(this.state.userId).call()
       this.setState({count})
       console.log("Count: ", this.state.count);
     } else {
@@ -49,12 +53,14 @@ class FileUpload extends Component {
 
   constructor(props) {
     super(props)
-    console.log("Props in upload: ",this.props);
+    console.log("Props in file upload: ",this.props);
+    userId = this.props.match.params.id;
     this.state = {
       contract: null,
       web3: null,
       buffer: null,
       account: null,
+      userId: "",
       count: "",
     }
   }
@@ -81,9 +87,9 @@ class FileUpload extends Component {
         console.error(error)
         return
       }
-       this.state.contract.methods.set("5e636fbb211ade1ab0adb294" ,file.name, dateFormat() ,result[0].hash).send({ from: this.state.account }).then((r) => {
-         console.log(r);
-       })
+      this.state.contract.methods.set(this.state.userId ,file.name, dateFormat() ,result[0].hash).send({ from: this.state.account }).then((r) => {
+        return this.setState({count});
+      })
     })
     
   }

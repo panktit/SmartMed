@@ -17,6 +17,7 @@ import {
 import PanelHeader from "../../components/PanelHeader/PanelHeader.jsx";
 
 let medicalHistory = [];
+let userId = "";
 
 class PatientTableList extends React.Component {
 
@@ -40,6 +41,8 @@ class PatientTableList extends React.Component {
 
   async loadBlockchainData() {
     const web3 = window.web3
+    // Load userId
+    this.setState({userId});
     // Load account
     const accounts = await web3.eth.getAccounts()
     this.setState({ account: accounts[0] })
@@ -48,7 +51,7 @@ class PatientTableList extends React.Component {
     if(networkData) {
       const contract = web3.eth.Contract(Store.abi, networkData.address)
       this.setState({ contract })
-      medicalHistory = await contract.methods.get("5e636fbb211ade1ab0adb294").call()
+      medicalHistory = await contract.methods.get(this.state.userId).call()
       this.setState({ medicalHistory })
       console.log("Medical History: ", medicalHistory);
     } else {
@@ -59,10 +62,12 @@ class PatientTableList extends React.Component {
   constructor(props) {
     super(props)
     console.log("View props: ", this.props);
+    userId = this.props.match.params.id;
     this.state = {
       contract: null,
       web3: null,
       account: null,
+      userId: "",
       medicalHistory: []
     }
   }

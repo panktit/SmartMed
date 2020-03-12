@@ -3,19 +3,17 @@ import React from "react";
 import PerfectScrollbar from "perfect-scrollbar";
 
 // reactstrap components
-import { Route, Switch, Redirect } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 
 // core components
 import DashboardNavbar from "../components/Navbars/DashboardNavbar.jsx";
 import DashboardFooter from "../components/Footers/DashboardFooter.jsx";
-import Sidebar from "../components/Sidebar/PatientSidebar.jsx";
 import Upload from "../views/profile-sections/Upload.jsx";
 import RecordList from "../views/profile-sections/PatientTableList.jsx";
 import UserPage from "../views/profile-sections/PatientUserpage.jsx";
+import Sidebar from "../components/Sidebar/PatientSidebar";
 
 var ps;
-
-let patient = {};
 
 class Dashboard extends React.Component {
 
@@ -26,8 +24,6 @@ class Dashboard extends React.Component {
   mainPanel = React.createRef();
   componentDidMount() {
     console.log("Props in Patient Layout did mount: ", this.props.location.state);
-    patient = this.props.location.state;
-    console.log("patient in Patient Layout did mount: ", patient);
     if (navigator.platform.indexOf("Win") > -1) {
       ps = new PerfectScrollbar(this.mainPanel.current);
       document.body.classList.toggle("perfect-scrollbar-on");
@@ -65,10 +61,10 @@ class Dashboard extends React.Component {
             {/* <Route path="/patient/profile/:id" component={UserPage} /> */}
             {/* <Route path={'/patient/view/'+patient._id} component={RecordList} />
             <Route path={'/patient/upload/'+patient._id} component={Upload} /> */}
-            <Route path="/patient/profile" render={props => <UserPage {...props} />} />
-            <Route path="/patient/view" render={props => <RecordList {...props} />} />
-            <Route path="/patient/upload" render={props => <Upload {...props} />} /> 
-            <Redirect from="/patient" to="patient/profile" />
+            <Route path="/patient/profile/:id" render={props => <UserPage {...props} />} />
+            <Route path="/patient/view/:id" render={props => <RecordList {...props} />} />
+            <Route path="/patient/upload/:id" render={props => <Upload {...props} />} /> 
+            {/* <Redirect from="/patient" to={'/patient/profile/'+patient._id} /> */}
           </Switch>
           <DashboardFooter fluid />
         </div>

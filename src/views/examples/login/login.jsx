@@ -13,6 +13,11 @@ const initialState = {
 };
 
 export class Login extends React.Component { 
+
+  constructor(props) {
+    super(props);
+    console.log("Props in login: ", this.props);
+  }
   state = initialState;
   handleChange = event => {
     const isCheckbox = event.target.type === "checkbox";
@@ -30,8 +35,9 @@ export class Login extends React.Component {
       if('message' in res.data) {
         this.setState({error: res.data.message});
       } else { 
-        history.push({
-          pathname:`/${res.data.userType}`,
+        console.log("GET res in login: " , res.data._id);
+        this.props.history.push({
+          pathname:`/${res.data.userType}/profile/${res.data._id}`,
           state: res.data
         });
       }

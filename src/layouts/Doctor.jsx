@@ -15,11 +15,13 @@ import UserPage from "../views/profile-sections/DoctorUserpage.jsx";
 var ps;
 
 class Dashboard extends React.Component {
-  state = {
-    backgroundColor: "blue"
-  };
+  constructor(props) {
+    super(props);
+  }
+
   mainPanel = React.createRef();
   componentDidMount() {
+    console.log("Props in Doctor Layout did mount: ", this.props.location.state);
     if (navigator.platform.indexOf("Win") > -1) {
       ps = new PerfectScrollbar(this.mainPanel.current);
       document.body.classList.toggle("perfect-scrollbar-on");
@@ -53,9 +55,9 @@ class Dashboard extends React.Component {
                 />
               );
             })} */}
-            <Route path="/doctor/profile" render={props => <UserPage {...props} />} />
-            <Route path="/doctor/view" render={props => <PatientList {...props} />} />
-            <Redirect from="/doctor" to="/doctor/profile" />
+            <Route path="/doctor/profile/:id" render={props => <UserPage {...props} />} />
+            <Route path="/doctor/view/:id" render={props => <PatientList {...props} />} />
+            {/* <Redirect from="/doctor" to="/doctor/profile" /> */}
           </Switch>
           <DashboardFooter fluid />
         </div>

@@ -1,25 +1,25 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
+
 // reactstrap components
 import {
   Button,
   Collapse,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  UncontrolledDropdown,
   NavbarBrand,
   Navbar,
   NavItem,
-  NavLink,
+  // NavLink,
   Nav,
   Container,
   UncontrolledTooltip
 } from "reactstrap";
 
-function LoginNavbar() {
+function LoginNavbar(props) {
+  console.log("Login Navbar props: ",props);
+  const [user, setUser] = React.useState(props.location.state);
   const [navbarColor, setNavbarColor] = React.useState("navbar-transparent");
   const [collapseOpen, setCollapseOpen] = React.useState(false);
+  console.log("User in Login Navbar: ", user);
   React.useEffect(() => {
     const updateNavbarColor = () => {
       if (
@@ -80,7 +80,7 @@ function LoginNavbar() {
             <Nav navbar>
               <NavItem>
                 <NavLink
-                  href="#pablo"
+                  to="#pablo"
                   // onClick={e => {
                   //   e.preventDefault();
                   //   document
@@ -92,34 +92,23 @@ function LoginNavbar() {
                   <p>About Us</p>
                 </NavLink>
               </NavItem>
-              <UncontrolledDropdown nav>
-                <DropdownToggle
-                  caret
-                  color="default"
-                  href="#pablo"
-                  nav
-                  onClick={e => e.preventDefault()}
+              <NavItem>
+                <NavLink {...props}
+                  to={{
+                  pathname: `/`+user.userType+`/profile/`+user._id, 
+                  state: { 
+                    _id: user._id, 
+                    userType: user.userType,
+                  }
+                }} 
                 >
-                  <i className="now-ui-icons design_app mr-1"></i>
-                  <p>Dashboard</p>
-                </DropdownToggle>
-                <DropdownMenu>
-                  <DropdownItem to="/doctor" tag={Link}>
-                    <i className="now-ui-icons media-2_sound-wave mr-1"></i>
-                    For Doctors
-                  </DropdownItem>
-                  <DropdownItem to="/patient" tag={Link}
-                    // href="#"
-                    // target="_blank"
-                  >
-                    <i className="now-ui-icons business_badge mr-1"></i>
-                    For Patients
-                  </DropdownItem>
-                </DropdownMenu>
-              </UncontrolledDropdown>
+                <i className="now-ui-icons objects_globe"></i>
+                <p>Dashboard</p>
+                </NavLink>
+              </NavItem>
               <NavItem>
                 <NavLink
-                  href="#pablo"
+                  to="#pablo"
                   // onClick={e => {
                   //   e.preventDefault();
                   //   document
@@ -159,7 +148,7 @@ function LoginNavbar() {
               </NavItem> */}
               <NavItem>
                 <NavLink
-                  href="#"
+                  to="#"
                   target="_blank"
                   id="twitter-tooltip"
                 >
@@ -172,7 +161,7 @@ function LoginNavbar() {
               </NavItem>
               <NavItem>
                 <NavLink
-                  href="#"
+                  to="#"
                   target="_blank"
                   id="facebook-tooltip"
                 >
@@ -185,7 +174,7 @@ function LoginNavbar() {
               </NavItem>
               <NavItem>
                 <NavLink
-                  href="#"
+                  to="#"
                   target="_blank"
                   id="instagram-tooltip"
                 >

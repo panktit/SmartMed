@@ -12,7 +12,8 @@ import DarkFooter from "../components/Footers/DarkFooter.js";
 // sections for this page
 import Typography from "./index-sections/Typography.js";
 
-function Index() {
+function Index(props) {
+  console.log("Login Index Props: ",props);
   React.useEffect(() => {
     document.body.classList.add("index-page");
     document.body.classList.add("sidebar-collapse");
@@ -26,7 +27,7 @@ function Index() {
   });
   return (
     <>
-      <LoginNavbar />
+      <LoginNavbar {...props}/>
       <div className="wrapper">
         <IndexHeader />
         <div className="main">
@@ -35,7 +36,7 @@ function Index() {
           <Tabs />
           <Pagination />
           <Notifications /> */}
-          <Typography />
+          <Typography {...props} />
           {/* <Javascript />
           <Carousel />
           <NucleoIcons />

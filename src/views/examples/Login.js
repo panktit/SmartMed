@@ -16,7 +16,7 @@ class LoginPage extends React.Component {
       <div className="App">
         <div className="login">
           <div className="container">
-            <Login />
+            <Login {...this.props}/>
           </div>
         </div>
       </div>

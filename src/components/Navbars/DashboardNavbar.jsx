@@ -17,13 +17,19 @@ import {
   Input
 } from "reactstrap";
 
+
+let user = {};
 // import routes from "doctor-routes.js";
 
 class Header extends React.Component {
+
+  constructor(props) {
+    super(props);
+  }
   state = {
     isOpen: false,
     dropdownOpen: false,
-    color: "transparent"
+    color: "transparent",
   };
   sidebarToggle = React.createRef();
   toggle = () => {
@@ -45,31 +51,6 @@ class Header extends React.Component {
       dropdownOpen: !this.state.dropdownOpen
     });
   };
-  // getBrand = () => {
-  //   var name;
-  //   routes.map((prop, key) => {
-  //     if (prop.collapse) {
-  //       prop.views.map((prop, key) => {
-  //         if (prop.path === this.props.location.pathname) {
-  //           name = prop.name;
-  //         }
-  //         return null;
-  //       });
-  //     } else {
-  //       if (prop.redirect) {
-  //         if (prop.path === this.props.location.pathname) {
-  //           name = prop.name;
-  //         }
-  //       } else {
-  //         if (prop.path === this.props.location.pathname) {
-  //           name = prop.name;
-  //         }
-  //       }
-  //     }
-  //     return null;
-  //   });
-  //   return name;
-  // };
   openSidebar = () => {
     document.documentElement.classList.toggle("nav-open");
     this.sidebarToggle.current.classList.toggle("toggled");
@@ -87,6 +68,9 @@ class Header extends React.Component {
     }
   };
   componentDidMount() {
+    console.log("Navbar props: " ,this.props);
+    user = this.props.location.state;
+    console.log("User in navbar: " ,user);
     window.addEventListener("resize", this.updateColor.bind(this));
   }
   componentDidUpdate(e) {
@@ -154,12 +138,14 @@ class Header extends React.Component {
             </form>
             <Nav navbar>
               <NavItem>
-                <Link to="/loginIndex" className="nav-link">
+                <Link to ={{
+                    pathname: `/home/`+user._id,
+                    state: { 
+                      _id: user._id, 
+                      userType: user.userType, 
+                    }
+                  }} className="nav-link">
                   Back
-                  
-                  <p>
-                    <span className="d-lg-none d-md-block">Stats</span>
-                  </p>
                 </Link>
               </NavItem>
               <Dropdown
@@ -183,9 +169,6 @@ class Header extends React.Component {
                 <Link to="/index" className="nav-link">
                   {/* <i className="now-ui-icons users_single-02" /> */}
                   Logout
-                  <p>
-                    <span className="d-lg-none d-md-block">Account</span>
-                  </p>
                 </Link>
               </NavItem>
             </Nav>

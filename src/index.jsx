@@ -31,7 +31,7 @@ ReactDOM.render(
     <Switch>
       <Switch>
         <Route path="/index" render={props => <Index {...props} />} />
-        <Route path="/loginIndex" render={props => <LoginIndex {...props} />} />
+        <Route path="/home/:id" render={props => <LoginIndex {...props} />} />
         <Route
           path="/nucleo-icons"
           render={props => <NucleoIcons {...props} />}

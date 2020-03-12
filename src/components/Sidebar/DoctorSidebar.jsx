@@ -8,6 +8,7 @@ import PerfectScrollbar from "perfect-scrollbar";
 import logo from "../../assets/img/tsmfavicon.png";
 
 var ps;
+let doctorState = {};
 
 class Sidebar extends React.Component {
   constructor(props) {
@@ -20,6 +21,8 @@ class Sidebar extends React.Component {
   }
   componentDidMount() {
     console.log("Sidebar props: ", this.props);
+    doctorState = this.props.location.state;
+    console.log("Doctor State Sidebar props: ", doctorState);
     if (navigator.platform.indexOf("Win") > -1) {
       ps = new PerfectScrollbar(this.refs.sidebar, {
         suppressScrollX: true,
@@ -58,8 +61,8 @@ class Sidebar extends React.Component {
                   className={
                     this.activeRoute("/doctor/profile")}
                 >
-                  <NavLink
-                    to="/doctor/profile"
+                  <NavLink {...this.props}
+                    to={'/doctor/profile/'+doctorState._id}
                     className="nav-link"
                     activeClassName="active"
                   >
@@ -72,8 +75,8 @@ class Sidebar extends React.Component {
                   className={
                     this.activeRoute("/doctor/view")}
                 >
-                  <NavLink
-                    to="/doctor/view"
+                  <NavLink {...this.props}
+                    to={'/doctor/view/'+doctorState._id}
                     className="nav-link"
                     activeClassName="active"
                   >

@@ -9,7 +9,12 @@ import PanelHeader from "../../components/PanelHeader/PanelHeader.jsx";
 import FileUpload from '../../components/FileUpload';
 
 class Upload extends React.Component {
+
+  constructor(props) {
+    super(props);
+  }
   render() {
+    console.log("Upload Props: " , this.props);
     return (
       <>
         <PanelHeader size="sm" />
@@ -21,7 +26,7 @@ class Upload extends React.Component {
                   <h5 className="title">Upload a new record</h5>
                 </CardHeader>
                 <CardBody>
-                  <FileUpload />
+                  <FileUpload {...this.props} />
                 </CardBody>
               </Card>
             </Col>
