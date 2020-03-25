@@ -15,6 +15,11 @@ import {
 
 // core components
 import PanelHeader from "../PanelHeader.jsx";
+import Sidebar from "../Sidebar/DoctorSidebar";
+import DashboardNavbar from "../Navbars/DashboardNavbar";
+import DashboardFooter from "../Footers/DashboardFooter";
+
+let doctorId = "";
 
 class DoctorTableList extends React.Component {
   constructor(props) {
@@ -25,93 +30,64 @@ class DoctorTableList extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.props);
+    console.log("Doctor Table list props: ", this.props);
+    doctorId = this.props.match.params.id;
     axios.get('http://localhost:4000/api/user/patients')
       .then(res => {
         this.setState({ patientList: res.data });
-      });
+    });
   }
 
   render() {
     return (
       <>
-        <PanelHeader size="sm" />
-        <div className="content">
-          <Row>
-            <Col xs={12}>
-              <Card>
-                <CardHeader>
-                  <CardTitle tag="h4">Patient List</CardTitle>
-                </CardHeader>
-                <CardBody>
-                  <Table responsive>
-                    <thead className="text-primary">
-                      <tr>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Age</th>
-                        <th>Blood Group</th>
-                        <th>Records</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {this.state.patientList.map(patient =>
-                        <tr>
-                          <td>{patient.first_name}</td>
-                          <td>{patient.last_name}</td>
-                          <td>{patient.age}</td>
-                          <td>{patient.blood_group}</td>
-                          <td><Link to={'/patient/view/'+patient._id} style={{ color: '#007bff' }} className="nav-link">View</Link></td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </Table>
-                </CardBody>
-              </Card>
-            </Col>
-            {/* <Col xs={12}>
-              <Card className="card-plain">
-                <CardHeader>
-                  <CardTitle tag="h4">Table on Plain Background</CardTitle>
-                  <p className="category"> Here is a subtitle for this table</p>
-                </CardHeader>
-                <CardBody>
-                  <Table responsive>
-                    <thead className="text-primary">
-                      <tr>
-                        {thead.map((prop, key) => {
-                          if (key === thead.length - 1)
-                            return (
-                              <th key={key} className="text-right">
-                                {prop}
-                              </th>
-                            );
-                          return <th key={key}>{prop}</th>;
-                        })}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {tbody.map((prop, key) => {
-                        return (
-                          <tr key={key}>
-                            {prop.data.map((prop, key) => {
-                              if (key === thead.length - 1)
-                                return (
-                                  <td key={key} className="text-right">
-                                    {prop}
-                                  </td>
-                                );
-                              return <td key={key}>{prop}</td>;
-                            })}
+        <div className="wrapper">
+          <Sidebar {...this.props} />
+          <div className="main-panel" ref={this.mainPanel}>
+            <DashboardNavbar {...this.props} />
+            <PanelHeader size="sm" />
+            <div className="content">
+              <Row>
+                <Col xs={12}>
+                  <Card>
+                    <CardHeader>
+                      <CardTitle tag="h4">Patient List</CardTitle>
+                    </CardHeader>
+                    <CardBody>
+                      <Table responsive>
+                        <thead className="text-primary">
+                          <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Age</th>
+                            <th>Blood Group</th>
+                            <th>Records</th>
                           </tr>
-                        );
-                      })}
-                    </tbody>
-                  </Table>
-                </CardBody>
-              </Card>
-            </Col> */}
-          </Row>
+                        </thead>
+                        <tbody>
+                          {this.state.patientList.map(patient =>
+                            <tr>
+                              <td>{patient.first_name}</td>
+                              <td>{patient.last_name}</td>
+                              <td>{patient.age}</td>
+                              <td>{patient.blood_group}</td>
+                              <td><Link to ={{
+                                pathname: `/record/view/`+doctorId,
+                                state: { 
+                                  pid: patient._id, 
+                                }
+                              }} style={{ color: '#007bff' }} className="nav-link">View</Link></td>
+                            </tr>
+                          )}
+                        </tbody>
+                      </Table>
+                    </CardBody>
+                  </Card>
+                </Col>
+              </Row>
+            </div>
+            <DashboardFooter fluid />
+          </div>
         </div>
       </>
     );

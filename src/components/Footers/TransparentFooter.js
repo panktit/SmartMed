@@ -11,39 +11,23 @@ function TransparentFooter() {
         <nav>
           <ul>
             <li>
-              <a
-                href="#"
-                target="_blank"
-              >
-                SmartMed
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                target="_blank"
-              >
-                About Us
-              </a>
+              <a herf="#">SmartMed</a>
             </li>
           </ul>
         </nav>
         <div className="copyright" id="copyright">
-          © {new Date().getFullYear()}, Designed by{" "}
+          © {new Date().getFullYear()}, Made by{" "}
           <a
             href="#"
-            target="_blank"
           >
             Vridhi
           </a>
-          . Coded by{" "}
+          &nbsp;and&nbsp;
           <a
             href="#"
-            target="_blank"
           >
             Pankti 
           </a>
-          .
         </div>
       </Container>
     </footer>

@@ -11,27 +11,14 @@ function DarkFooter() {
         <nav>
           <ul>
             <li>
-              <a
-                href="https://www.creative-tim.com?ref=nukr-dark-footer"
-                target="_blank"
-              >
-                SmartMed
-              </a>
-            </li>
-            <li>
-              <a
-                href="http://presentation.creative-tim.com?ref=nukr-dark-footer"
-                target="_blank"
-              >
-                About Us
-              </a>
+              <a href="#">SmartMed</a>
             </li>
           </ul>
         </nav>
         <div className="copyright" id="copyright">
-          © {new Date().getFullYear()}, Designed by{" "}
-            Vridhi. Coded by{" "}
-          Pankti.
+          © {new Date().getFullYear()}, Made by {" "}
+            Vridhi and
+          Pankti
         </div>
       </Container>
     </footer>

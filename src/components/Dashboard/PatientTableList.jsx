@@ -15,6 +15,9 @@ import {
 
 // core components
 import PanelHeader from "../PanelHeader.jsx";
+import Sidebar from "../Sidebar/PatientSidebar";
+import DashboardNavbar from "../Navbars/DashboardNavbar";
+import DashboardFooter from "../Footers/DashboardFooter";
 
 let medicalHistory = [];
 let userId = "";
@@ -75,35 +78,42 @@ class PatientTableList extends React.Component {
   render() {
     return (
       <>
-        <PanelHeader size="sm" />
-        <div className="content">
-          <Row>
-            <Col xs={8}>
-              <Card>
-                <CardHeader>
-                  <CardTitle tag="h4">Uploaded Records</CardTitle>
-                </CardHeader>
-                <CardBody>
-                  <Table responsive>
-                    <thead className="text-primary">
-                      <tr>
-                        <th>Name</th>
-                        <th>Uploaded On</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {this.state.medicalHistory.map(record =>
-                        <tr>
-                          <td><a style={{ color: '#007bff' }}href={'https://ipfs.infura.io/ipfs/'+record.fileHash} target="_blank">{record.fileName} </a></td>
-                          <td>{record.date}</td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </Table>
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
+        <div className="wrapper">
+          <Sidebar {...this.props} />
+          <div className="main-panel" ref={this.mainPanel}>
+            <DashboardNavbar {...this.props} />
+            <PanelHeader size="sm" />
+            <div className="content">
+              <Row>
+                <Col xs={8}>
+                  <Card>
+                    <CardHeader>
+                      <CardTitle tag="h4">Uploaded Records</CardTitle>
+                    </CardHeader>
+                    <CardBody>
+                      <Table responsive>
+                        <thead className="text-primary">
+                          <tr>
+                            <th>Name</th>
+                            <th>Uploaded On</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {this.state.medicalHistory.map(record =>
+                            <tr>
+                              <td><a style={{ color: '#007bff' }}href={'https://ipfs.infura.io/ipfs/'+record.fileHash} target="_blank" rel="noopener noreferrer">{record.fileName} </a></td>
+                              <td>{record.date}</td>
+                            </tr>
+                          )}
+                        </tbody>
+                      </Table>
+                    </CardBody>
+                  </Card>
+                </Col>
+              </Row>
+            </div>
+            <DashboardFooter fluid />
+          </div>
         </div>
       </>
     );

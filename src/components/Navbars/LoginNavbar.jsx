@@ -16,7 +16,7 @@ import {
 
 function LoginNavbar(props) {
   console.log("Login Navbar props: ",props);
-  const [user, setUser] = React.useState(props.location.state);
+  const [user] = React.useState(props.location.state);
   const [navbarColor, setNavbarColor] = React.useState("navbar-transparent");
   const [collapseOpen, setCollapseOpen] = React.useState(false);
   console.log("User in Login Navbar: ", user);
@@ -77,9 +77,10 @@ function LoginNavbar(props) {
             isOpen={collapseOpen}
             navbar
           >
-            <Nav navbar>
+            <Nav navbar style={{marginTop: "5px"}}>
               <NavItem>
                 <NavLink
+                  style={{margin: "5px 15px", display: "block"}}
                   to="#pablo"
                   // onClick={e => {
                   //   e.preventDefault();
@@ -88,12 +89,13 @@ function LoginNavbar(props) {
                   //     .scrollIntoView();
                   // }}
                 >
-                  <i className="now-ui-icons travel_info"></i>
-                  <p>About Us</p>
+                  <i className="now-ui-icons travel_info" style={{margin: "5px", fontSize: "15px", verticalAlign: "middle"}}></i>
+                  <p style={{fontSize: "10px", verticalAlign: "middle"}}>ABOUT US</p>
                 </NavLink>
               </NavItem>
               <NavItem>
                 <NavLink {...props}
+                  style={{margin: "5px 15px", display: "block"}}
                   to={{
                   pathname: `/`+user.userType+`/profile/`+user._id, 
                   state: { 
@@ -102,12 +104,13 @@ function LoginNavbar(props) {
                   }
                 }} 
                 >
-                <i className="now-ui-icons objects_globe"></i>
-                <p>Dashboard</p>
+                <i className="now-ui-icons business_badge" style={{margin: "5px", fontSize: "15px", verticalAlign: "middle"}}></i>
+                <p style={{fontSize: "10px", verticalAlign: "middle"}}>DASHBOARD</p>
                 </NavLink>
               </NavItem>
               <NavItem>
                 <NavLink
+                  style={{margin: "5px 15px", display: "block"}}
                   to="#pablo"
                   // onClick={e => {
                   //   e.preventDefault();
@@ -116,8 +119,8 @@ function LoginNavbar(props) {
                   //     .scrollIntoView();
                   // }}
                 >
-                  <i className="now-ui-icons objects_globe"></i>
-                  <p>Contact Us</p>
+                  <i className="now-ui-icons objects_globe" style={{margin: "5px", fontSize: "15px", verticalAlign: "middle"}}></i>
+                  <p style={{fontSize: "10px", verticalAlign: "middle"}}>CONTACT US</p>
                 </NavLink>
               </NavItem>
               <NavItem>
@@ -125,8 +128,8 @@ function LoginNavbar(props) {
                   className="nav-link btn-neutral"
                   color="info"
                   size="sm"
-                  style={{marginTop:"2px"}}
-                  to="/index"
+                  style={{marginTop:"-3px", marginLeft: "10px", marginRight: "5px"}}
+                  to="/"
                   id="logout"
                   tag={Link}
                 >
@@ -148,12 +151,13 @@ function LoginNavbar(props) {
               </NavItem> */}
               <NavItem>
                 <NavLink
+                  style={{margin: "5px 12px", display: "block"}}
                   to="#"
                   target="_blank"
                   id="twitter-tooltip"
                 >
-                  <i className="fab fa-twitter"></i>
-                  <p className="d-lg-none d-xl-none">Twitter</p>
+                  <i className="fab fa-twitter" style={{margin: "5px", fontSize: "18px"}}></i>
+                  <p className="d-lg-none d-xl-none" style={{fontSize: "10px", verticalAlign: "middle"}}>TWITTER</p>
                 </NavLink>
                 <UncontrolledTooltip target="#twitter-tooltip">
                   Follow us on Twitter
@@ -161,12 +165,13 @@ function LoginNavbar(props) {
               </NavItem>
               <NavItem>
                 <NavLink
+                  style={{margin: "5px 12px",  display: "block"}}
                   to="#"
                   target="_blank"
                   id="facebook-tooltip"
                 >
-                  <i className="fab fa-facebook-square"></i>
-                  <p className="d-lg-none d-xl-none">Facebook</p>
+                  <i className="fab fa-facebook-square" style={{margin: "5px", fontSize: "18px"}}></i>
+                  <p className="d-lg-none d-xl-none" style={{fontSize: "10px", verticalAlign: "middle"}}>FACEBOOK</p>
                 </NavLink>
                 <UncontrolledTooltip target="#facebook-tooltip">
                   Like us on Facebook
@@ -174,12 +179,13 @@ function LoginNavbar(props) {
               </NavItem>
               <NavItem>
                 <NavLink
+                  style={{margin: "5px 12px",  display: "block"}}
                   to="#"
                   target="_blank"
                   id="instagram-tooltip"
                 >
-                  <i className="fab fa-instagram"></i>
-                  <p className="d-lg-none d-xl-none">Instagram</p>
+                  <i className="fab fa-instagram" style={{margin: "5px", fontSize: "18px"}}></i>
+                  <p className="d-lg-none d-xl-none" style={{fontSize: "10px", verticalAlign: "middle"}}>INSTAGRAM</p>
                 </NavLink>
                 <UncontrolledTooltip target="#instagram-tooltip">
                   Follow us on Instagram

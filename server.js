@@ -8,7 +8,7 @@ const PORT = 4000;
 app.use(cors());
 app.use(bodyParser.json());
 
-mongoose.connect('mongodb://localhost/smartmed', { useNewUrlParser: true });
+mongoose.connect('mongodb://localhost/smartmed', { useNewUrlParser: true, useUnifiedTopology: true });
 const connection = mongoose.connection;
 
 connection.once('open', function() {

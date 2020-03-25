@@ -62,7 +62,7 @@ class LoginPage extends React.Component {
                 <div className="header">Welcome Back!</div>
                 <div className="content">
                   <div className="image">
-                    <img src={loginImg} />
+                    <img src={loginImg} alt="login"/>
                   </div>
                   <div className="form">
                     <div className="form-group">

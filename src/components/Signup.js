@@ -135,7 +135,7 @@ class SignupPage extends React.Component {
                 <div className="header">Welcome to SmartMed!</div>
                 <div className="content">
                   <div className="image">
-                    <img src={loginImg} />
+                    <img src={loginImg} alt="signup"/>
                   </div>
                   <div className="form">
                     <div className="form-group">

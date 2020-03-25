@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { Router, Route, Switch, Redirect } from "react-router-dom";
+import { Router, Route, Switch } from "react-router-dom";
 import { createBrowserHistory } from 'history';
 
 // styles for this kit
@@ -18,25 +18,31 @@ import Index from "./components/Index.js";
 import LoginIndex from "./components/LoginIndex.js";
 import LoginPage from "./components/Login.js";
 import SignupPage from "./components/Signup.js";
-import DoctorLayout from "./components/Doctor.jsx";
-import PatientLayout from "./components/Patient.jsx";
-import RecordLayout from "./components/Record.jsx";
-// import DoctorProfile from "views/examples/DoctorProfile.js";
+import NotFound from "./components/NotFound.js";
+import PatientUpload from "./components/Dashboard/PatientUpload.jsx";
+import PatientRecordList from "./components/Dashboard/PatientTableList.jsx";
+import PatientUserPage from "./components/Dashboard/PatientUserpage.jsx"
+import DoctorUserPage from "./components/Dashboard/DoctorUserpage.jsx"
+import PatientList from "./components/Dashboard/DoctorTableList.jsx";
+import RecordList from "./components/Dashboard/RecordTableList.jsx";
+import DoctorUpload from "./components/Dashboard/DoctorUpload.jsx";
 
 ReactDOM.render(
   <Router history={createBrowserHistory()}>
     <Switch>
       <Switch>
-        <Route path="/index" render={props => <Index {...props} />} />
+        <Route exact path="/" render={props => <Index {...props} />} />
         <Route path="/home/:id" render={props => <LoginIndex {...props} />} />
         <Route path="/login" render={props => <LoginPage {...props} />} />
         <Route path="/register" render={props => <SignupPage {...props} />} />
-        {/* <Route path="/doctor" render={props => <DoctorProfile {...props} />} /> */}
-        <Route path="/doctor" render={props => <DoctorLayout {...props} />} />
-        <Route path="/patient" render={props => <PatientLayout {...props} />} />
-        <Route path="/record" render={props => <RecordLayout {...props} />} />
-        <Redirect to="/index" />
-        <Redirect from="/" to="/index" />
+        <Route path="/patient/profile/:id" render={props => <PatientUserPage {...props} />} />
+        <Route path="/patient/view/:id" render={props => <PatientRecordList {...props} />} />
+        <Route path="/patient/upload/:id" render={props => <PatientUpload {...props} />} />
+        <Route path="/doctor/profile/:id" render={props => <DoctorUserPage {...props} />} />
+        <Route path="/doctor/view/:id" render={props => <PatientList {...props} />} />
+        <Route path="/record/view/:id" render={props => <RecordList {...props} />} />
+        <Route path="/record/upload/:id" render={props => <DoctorUpload {...props} />} />
+        <Route path="*" component={NotFound} />
       </Switch>*
     </Switch>
   </Router>,

@@ -15,6 +15,9 @@ import {
 
 // core components
 import PanelHeader from "../PanelHeader.jsx";
+import Sidebar from "../Sidebar/PatientSidebar";
+import DashboardNavbar from "../Navbars/DashboardNavbar";
+import DashboardFooter from "../Footers/DashboardFooter";
 
 let patientID = "";
 
@@ -40,121 +43,111 @@ class User extends React.Component {
   render() {
     return (
       <>
-        <PanelHeader size="sm" />
-        <div className="content">
-          <Row>
-            <Col md="8">
-              <Card>
-                <CardHeader>
-                  <h5 className="title">My Profile</h5>
-                </CardHeader>
-                <CardBody>
-                  <Form>
-                    <Row>
-                      <Col className="pr-1" md="6">
-                        <FormGroup>
-                          <label>Account</label>
-                          <Input
-                            defaultValue="0x31F78757A4bAe84808Aa91a1cebf43e50ca0BFd6"
-                            disabled
-                            placeholder="Account"
-                            type="text"
-                          />
-                        </FormGroup>
-                      </Col>
+      <div className="wrapper">
+        <Sidebar {...this.props} />
+        <div className="main-panel" ref={this.mainPanel}>
+          <DashboardNavbar {...this.props} />
+            <PanelHeader size="sm" />
+            <div className="content">
+              <Row>
+                <Col md="8">
+                  <Card>
+                    <CardHeader>
+                      <h5 className="title">My Profile</h5>
+                    </CardHeader>
+                    <CardBody>
+                      <Form>
+                        <Row>
+                          <Col className="pr-1" md="6">
+                            <FormGroup>
+                              <label>Account</label>
+                              <Input
+                                defaultValue="0x31F78757A4bAe84808Aa91a1cebf43e50ca0BFd6"
+                                disabled
+                                placeholder="Account"
+                                type="text"
+                              />
+                            </FormGroup>
+                          </Col>
+                          <Col className="pl-1" md="6">
+                            <FormGroup>
+                              <label htmlFor="exampleInputEmail1">
+                                Email address
+                              </label>
+                              <Input defaultValue={this.state.user.email} type="email" disabled />
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col className="pr-1" md="6">
+                            <FormGroup>
+                              <label>First Name</label>
+                              <Input
+                                defaultValue={this.state.user.first_name}
+                                type="text"
+                                disabled
+                              />
+                            </FormGroup>
+                          </Col>
+                          <Col className="pl-1" md="6">
+                            <FormGroup>
+                              <label>Last Name</label>
+                              <Input
+                                defaultValue={this.state.user.last_name}
+                                placeholder="Last Name"
+                                type="text"
+                                disabled
+                              />
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col className="pr-1" md="6">
+                            <FormGroup>
+                              <label>Age</label>
+                              <Input 
+                                defaultValue={this.state.user.age} 
+                                type="number" 
+                                min="0"
+                                max="120"
+                                disabled
+                              />
+                            </FormGroup>
+                          </Col>
+                          <Col className="pl-1" md="6">
+                            <FormGroup>
+                              <label>Blood Group</label>
+                              <Input
+                                defaultValue={this.state.user.blood_group}
+                                type="text"
+                                disabled
+                              />
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                      </Form>
+                    </CardBody>
+                  </Card>
+                </Col>
+                <Col md="4">
+                  <Card className="card-user">
+                    <CardBody>
+                      <Row>
                       <Col className="pl-1" md="6">
-                        <FormGroup>
-                          <label htmlFor="exampleInputEmail1">
-                            Email address
-                          </label>
-                          <Input defaultValue={this.state.user.email} type="email" disabled />
-                        </FormGroup>
+                        Documents Uploaded
                       </Col>
-                    </Row>
-                    <Row>
                       <Col className="pr-1" md="6">
-                        <FormGroup>
-                          <label>First Name</label>
-                          <Input
-                            defaultValue={this.state.user.first_name}
-                            type="text"
-                            disabled
-                          />
-                        </FormGroup>
+                        23
                       </Col>
-                      <Col className="pl-1" md="6">
-                        <FormGroup>
-                          <label>Last Name</label>
-                          <Input
-                            defaultValue={this.state.user.last_name}
-                            placeholder="Last Name"
-                            type="text"
-                            disabled
-                          />
-                        </FormGroup>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col className="pr-1" md="6">
-                        <FormGroup>
-                          <label>Age</label>
-                          <Input 
-                            defaultValue={this.state.user.age} 
-                            type="number" 
-                            min="0"
-                            max="120"
-                            disabled
-                          />
-                        </FormGroup>
-                      </Col>
-                      <Col className="pl-1" md="6">
-                        <FormGroup>
-                          <label>Blood Group</label>
-                          <Input
-                            defaultValue={this.state.user.blood_group}
-                            type="text"
-                            disabled
-                          />
-                        </FormGroup>
-                      </Col>
-                    </Row>
-                  </Form>
-                </CardBody>
-              </Card>
-            </Col>
-            <Col md="4">
-              <Card className="card-user">
-                {/* <div className="image">
-                  <img alt="..." src={require("../../assets/img/bg5.jpg")} />
-                </div> */}
-                <CardBody>
-                  {/* <div className="author">
-                    <a href="#pablo" onClick={e => e.preventDefault()}>
-                      <img
-                        alt="..."
-                        className="avatar border-gray"
-                        src={require("../../assets/img/mike.jpg")}
-                      />
-                      <h5 className="title">Mike Andrew</h5>
-                    </a>
-                  </div>
-                  <p className="description text-center">
-                  "I cared for eight seconds. <br/>
-                    Then I got distracted."
-                  </p> */}
-                  <Row>
-                  <Col className="pl-1" md="6">
-                    Documents Uploaded
-                  </Col>
-                  <Col className="pr-1" md="6">
-                    23
-                  </Col>
-                  </Row>
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
+                      </Row>
+                    </CardBody>
+                  </Card>
+                </Col>
+              </Row>
+            </div>
+          <DashboardFooter fluid />
         </div>
+      </div>
       </>
     );
   }

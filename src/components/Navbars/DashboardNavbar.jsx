@@ -6,26 +6,17 @@ import {
   NavbarToggler,
   Nav,
   NavItem,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
   Container,
-  InputGroup,
-  InputGroupText,
-  InputGroupAddon,
-  Input
 } from "reactstrap";
-
-
-let user = {};
-// import routes from "doctor-routes.js";
+import axios from "axios";
+let userId = "";
+let userType = "";
 
 class Header extends React.Component {
 
-  constructor(props) {
-    super(props);
-  }
+  // constructor(props) {
+  //   super(props);
+  // }
   state = {
     isOpen: false,
     dropdownOpen: false,
@@ -68,10 +59,15 @@ class Header extends React.Component {
     }
   };
   componentDidMount() {
-    console.log("Navbar props: " ,this.props);
-    user = this.props.location.state;
-    console.log("User in navbar: " ,user);
     window.addEventListener("resize", this.updateColor.bind(this));
+    console.log("Navbar props: " ,this.props);
+    userId = this.props.match.params.id;
+    console.log("User in navbar: " ,userId);
+    axios.get('http://localhost:4000/api/user/'+userId)
+    .then(res => {
+      userType = res.data.userType;
+      console.log("User type in dashboard navbar: " ,userType);
+  });
   }
   componentDidUpdate(e) {
     if (
@@ -126,48 +122,20 @@ class Header extends React.Component {
             navbar
             className="justify-content-end"
           >
-            <form>
-              <InputGroup className="no-border">
-                <Input placeholder="Search..." />
-                <InputGroupAddon addonType="append">
-                  <InputGroupText>
-                    <i className="now-ui-icons ui-1_zoom-bold" />
-                  </InputGroupText>
-                </InputGroupAddon>
-              </InputGroup>
-            </form>
             <Nav navbar>
               <NavItem>
                 <Link to ={{
-                    pathname: `/home/`+user._id,
+                    pathname: `/home/`+userId,
                     state: { 
-                      _id: user._id, 
-                      userType: user.userType, 
+                      _id: userId, 
+                      userType: userType, 
                     }
                   }} className="nav-link">
-                  Back
+                  Home
                 </Link>
               </NavItem>
-              <Dropdown
-                nav
-                isOpen={this.state.dropdownOpen}
-                toggle={e => this.dropdownToggle(e)}
-              >
-                <DropdownToggle caret nav>
-                  <i className="now-ui-icons location_world" />
-                  <p>
-                    <span className="d-lg-none d-md-block">Some Actions</span>
-                  </p>
-                </DropdownToggle>
-                <DropdownMenu right>
-                  <DropdownItem tag="a">Action</DropdownItem>
-                  <DropdownItem tag="a">Another Action</DropdownItem>
-                  <DropdownItem tag="a">Something else here</DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
               <NavItem>
-                <Link to="/index" className="nav-link">
-                  {/* <i className="now-ui-icons users_single-02" /> */}
+                <Link to="/" className="nav-link">
                   Logout
                 </Link>
               </NavItem>

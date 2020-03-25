@@ -8,7 +8,7 @@ import PerfectScrollbar from "perfect-scrollbar";
 import logo from "../../assets/img/tsmfavicon.png";
 
 var ps;
-let doctorState = {};
+let doctorId = "";
 
 class Sidebar extends React.Component {
   constructor(props) {
@@ -21,8 +21,8 @@ class Sidebar extends React.Component {
   }
   componentDidMount() {
     console.log("Sidebar props: ", this.props);
-    doctorState = this.props.location.state;
-    console.log("Doctor State Sidebar props: ", doctorState);
+    doctorId = this.props.match.params.id;
+    console.log("Doctor State Sidebar props: ", doctorId);
     if (navigator.platform.indexOf("Win") > -1) {
       ps = new PerfectScrollbar(this.refs.sidebar, {
         suppressScrollX: true,
@@ -40,15 +40,16 @@ class Sidebar extends React.Component {
       <div className="sidebar" data-color="blue">
         <div className="logo">
           <a
-            href="#"
+            href="/"
             className="simple-text logo-mini"
+            target="_blank"
           >
             <div className="logo-img">
               <img src={logo} alt="smartmed-logo" />
             </div>
           </a>
           <a
-            href="#"
+            href="/"
             className="simple-text logo-normal"
             target="_blank"
           >
@@ -62,7 +63,7 @@ class Sidebar extends React.Component {
                     this.activeRoute("/doctor/profile")}
                 >
                   <NavLink {...this.props}
-                    to={'/doctor/profile/'+doctorState._id}
+                    to={'/doctor/profile/'+doctorId}
                     className="nav-link"
                     activeClassName="active"
                   >
@@ -76,7 +77,7 @@ class Sidebar extends React.Component {
                     this.activeRoute("/doctor/view")}
                 >
                   <NavLink {...this.props}
-                    to={'/doctor/view/'+doctorState._id}
+                    to={'/doctor/view/'+doctorId}
                     className="nav-link"
                     activeClassName="active"
                   >
