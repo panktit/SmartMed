@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { Router, Route, Switch, Redirect } from "react-router-dom";
+import { createBrowserHistory } from 'history';
 
 // styles for this kit
 
@@ -13,37 +14,21 @@ import "./assets/demo/nucleo-icons-page-styles.css";
 import * as serviceWorker from "./registerServiceWorker";
 
 // pages for this kit
-import Index from "./views/Index.js";
-import LoginIndex from "./views/LoginIndex.js";
-import NucleoIcons from "./views/NucleoIcons.js";
-import LoginPage from "./views/examples/Login.js";
-import SignupPage from "./views/examples/Signup.js";
-import LandingPage from "./views/examples/LandingPage.js";
-import ProfilePage from "./views/examples/ProfilePage.js";
-import DoctorLayout from "./layouts/Doctor.jsx";
-import PatientLayout from "./layouts/Patient.jsx";
-import RecordLayout from "./layouts/Record.jsx";
-import history from './history.js';
+import Index from "./components/Index.js";
+import LoginIndex from "./components/LoginIndex.js";
+import LoginPage from "./components/Login.js";
+import SignupPage from "./components/Signup.js";
+import DoctorLayout from "./components/Doctor.jsx";
+import PatientLayout from "./components/Patient.jsx";
+import RecordLayout from "./components/Record.jsx";
 // import DoctorProfile from "views/examples/DoctorProfile.js";
 
 ReactDOM.render(
-  <Router history={history}>
+  <Router history={createBrowserHistory()}>
     <Switch>
       <Switch>
         <Route path="/index" render={props => <Index {...props} />} />
         <Route path="/home/:id" render={props => <LoginIndex {...props} />} />
-        <Route
-          path="/nucleo-icons"
-          render={props => <NucleoIcons {...props} />}
-        />
-        <Route
-          path="/landing-page"
-          render={props => <LandingPage {...props} />}
-        />
-        <Route
-          path="/profile-page"
-          render={props => <ProfilePage {...props} />}
-        />
         <Route path="/login" render={props => <LoginPage {...props} />} />
         <Route path="/register" render={props => <SignupPage {...props} />} />
         {/* <Route path="/doctor" render={props => <DoctorProfile {...props} />} /> */}

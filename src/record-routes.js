@@ -1,4 +1,4 @@
-import TableList from "./views/profile-sections/TableList.jsx";
+import TableList from "./components/Dashboard/TableList.jsx";
 
 var recordRoutes = [
   {
