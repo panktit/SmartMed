@@ -96,6 +96,7 @@ class PatientTableList extends React.Component {
                           <tr>
                             <th>Name</th>
                             <th>Uploaded On</th>
+                            <th>Uploaded By</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -103,6 +104,7 @@ class PatientTableList extends React.Component {
                             <tr>
                               <td><a style={{ color: '#007bff' }}href={'https://ipfs.infura.io/ipfs/'+record.fileHash} target="_blank" rel="noopener noreferrer">{record.fileName} </a></td>
                               <td>{record.date}</td>
+                              <td>{record.by}</td>
                             </tr>
                           )}
                         </tbody>

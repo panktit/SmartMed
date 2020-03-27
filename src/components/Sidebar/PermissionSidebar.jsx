@@ -8,21 +8,23 @@ import PerfectScrollbar from "perfect-scrollbar";
 import logo from "../../assets/img/tsmfavicon.png";
 
 var ps;
+let doctorId = "";
 let patientId = "";
 
 class Sidebar extends React.Component {
   constructor(props) {
     super(props);
-    this.activeRoute.bind(this); 
+    this.activeRoute.bind(this);
   }
   // verifies if routeName is the one active (in browser input)
   activeRoute(routeName) {
     return this.props.location.pathname.indexOf(routeName) > -1 ? "active" : "";
   }
   componentDidMount() {
-    console.log("Patient Sidebar props: ", this.props);
+    console.log("Permission Sidebar props: ", this.props);
     patientId = this.props.match.params.id;
-    console.log("Patient id Sidebar props: ", patientId);
+    doctorId = this.props.location.state.did;
+    console.log("Doctor State Permission Sidebar props: ", doctorId);
     if (navigator.platform.indexOf("Win") > -1) {
       ps = new PerfectScrollbar(this.refs.sidebar, {
         suppressScrollX: true,
@@ -57,60 +59,40 @@ class Sidebar extends React.Component {
           </a>
         </div>
         <div className="sidebar-wrapper" ref="sidebar">
-          <Nav>
+            <Nav>
                 <li
-                  className={this.activeRoute("/patient/profile")}
+                  className={
+                    this.activeRoute("/permission/grant")}
                 >
-                  {/* <NavLink {...props} isActive={(match, location) => location.pathname.startsWith(props.to.pathname)}/> */}
+                  <NavLink {...this.props}
+                    to ={{
+                      pathname: `/permission/grant/`+patientId,
+                      state: { 
+                          did: doctorId, 
+                      }
+                  }}
+                    className="nav-link"
+                    activeClassName="active"
+                  >
+                    <i className="now-ui-icons objects_key-25" />
+                    <p>Grant Permissions</p>
+                  </NavLink>
+                </li>
+
+                {/* <li
+                  className={
+                    this.activeRoute("/patient/profile")}
+                >
                   <NavLink {...this.props}
                     to={'/patient/profile/'+patientId}
                     className="nav-link"
                     activeClassName="active"
                   >
-                    <i className="now-ui-icons users_single-02" />
-                    <p>My Profile</p>
+                    <i className="now-ui-icons arrows-1_minimal-left" />
+                    <p>Back to My Profile</p>
                   </NavLink>
-                </li>
-
-                <li
-                  className={this.activeRoute("/patient/view")}
-                >
-                  <NavLink {...this.props}
-                    to={'/patient/view/'+patientId}
-                    className="nav-link"
-                    activeClassName="active"
-                  >
-                    <i className="now-ui-icons files_paper" />
-                    <p>View Records</p>
-                  </NavLink>
-                </li>
-
-                <li
-                  className={this.activeRoute("/patient/upload")}
-                >
-                  <NavLink {...this.props}
-                    to={'/patient/upload/'+patientId}
-                    className="nav-link"
-                    activeClassName="active"
-                  >
-                    <i className="now-ui-icons arrows-1_cloud-upload-94" />
-                    <p>Upload Records</p>
-                  </NavLink>
-                </li>
-
-                <li
-                  className={this.activeRoute("/patient/grant")}
-                >
-                  <NavLink {...this.props}
-                    to={'/patient/grant/'+patientId}
-                    className="nav-link"
-                    activeClassName="active"
-                  >
-                    <i className="now-ui-icons files_paper" />
-                    <p>View Doctors</p>
-                  </NavLink>
-                </li>
-          </Nav>
+                </li> */}
+            </Nav>
         </div>
       </div>
     );

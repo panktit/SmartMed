@@ -31,12 +31,12 @@ class User extends React.Component {
   }
 
   componentDidMount() {
-    console.log("Props in Patient User Page: ", this.props);
+    console.log("Props in Doctor User Page: ", this.props);
     doctorID = this.props.match.params.id;
     axios.get('http://localhost:4000/api/user/'+doctorID)
       .then(res => {
         this.setState({ user: res.data });
-        console.log("User state in Patient user page: " ,this.state.user);
+        console.log("User state in Doctor user page: " ,this.state.user);
     });
   }
   render() {

@@ -42,12 +42,13 @@ router.post('/signup', (req, res, next) => {
     newUser.license = req.body.license
   } else if(newUser.userType === "patient") {
     newUser.age = req.body.age,
-    newUser.blood_group = req.body.blood_group
+    newUser.blood_group = req.body.blood_group,
+    newUser.list.push("5e63702f211ade1ab0adb295");
+    // newUser.list.push("5e7e3725d0500b0c2c6faef7");
   }
-
   // Call setPassword function to hash password 
   newUser.setPassword(req.body.password); 
-
+  newUser.generateKeyPair();
   // Save newUser object to database 
   User.create(newUser ,function(err, post) { 
     if (err) return next(err); 
@@ -73,9 +74,25 @@ router.get('/patients', function(req, res, next) {
   });
 });
 
+/* GET ALL DOCTORS */
+router.get('/doctors', function(req, res, next) {
+  User.find({"userType": "doctor"},function (err, users) {
+    if (err) return next(err);
+    res.json(users);
+  });
+});
+
 /* GET SINGLE USER BY ID */
 router.get('/:id', function(req, res, next) {
   User.findById(req.params.id, function (err, post) {
+    if (err) return next(err);
+    res.json(post);
+  });
+});
+
+// GET ONLY BASIC INFO FOR A DOCTOR
+router.get('/doctors/:id', function(req, res, next) {
+  User.find({"_id": req.params.id},{first_name: 1, last_name: 1}, function (err, post) {
     if (err) return next(err);
     res.json(post);
   });

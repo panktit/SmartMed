@@ -6,7 +6,7 @@ import PanelHeader from "../PanelHeader.jsx";
 import Sidebar from "../Sidebar/RecordSidebar";
 import DashboardNavbar from "../Navbars/DashboardNavbar";
 import DashboardFooter from "../Footers/DashboardFooter";
-
+import axios from 'axios';
 import Web3 from 'web3';
 import Store from '../../abis/Store.json'
 import { Button } from 'reactstrap';
@@ -16,8 +16,8 @@ const ipfsClient = require('ipfs-http-client')
 const ipfs = ipfsClient({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' }) // leaving out the arguments will default to these values
 let file = "";
 let count = "";
-let userId = "";
-
+let patientId = "";
+let doctorId="";
 
 class Upload extends React.Component {
 
@@ -41,18 +41,18 @@ class Upload extends React.Component {
 
   async loadBlockchainData() {
     const web3 = window.web3
-    // Load userId
-    this.setState({userId});
+    // Load patientId
+    this.setState({patientId});
     // Load account
     const accounts = await web3.eth.getAccounts()
-    console.log("User id: ", this.state.userId);
+    console.log("User id: ", this.state.patientId);
     this.setState({ account: accounts[0] })
     const networkId = await web3.eth.net.getId()
     const networkData = Store.networks[networkId]
     if(networkData) {
       const contract = web3.eth.Contract(Store.abi, networkData.address)
       this.setState({ contract })
-      count = await this.state.contract.methods.getCount(this.state.userId).call()
+      count = await this.state.contract.methods.getCount(this.state.patientId).call()
       this.setState({count})
       console.log("Count: ", this.state.count);
     } else {
@@ -63,17 +63,27 @@ class Upload extends React.Component {
   constructor(props) {
     super(props)
     console.log("Props in doctor file upload: ",this.props);
-    userId = this.props.location.state.pid;
+    patientId = this.props.location.state.pid;
+    doctorId= this.props.match.params.id;
     this.state = {
       contract: null,
       web3: null,
       buffer: null,
       account: null,
-      userId: "",
+      patientId: "",
       count: "",
+      doctorId: "",
+      doctorname: "",
     }
   }
 
+  componentDidMount() {
+    axios.get('http://localhost:4000/api/user/'+doctorId)
+      .then(res => {
+        this.setState({ doctorname: res.data.first_name+' '+res.data.last_name })
+        console.log("Username in Doctor upload: " ,this.state.doctorname);
+    });
+  }
 
   captureFile = (event) => {
     event.preventDefault()
@@ -96,7 +106,7 @@ class Upload extends React.Component {
         console.error(error)
         return
       }
-      this.state.contract.methods.set(this.state.userId ,file.name, dateFormat() ,result[0].hash).send({ from: this.state.account }).then((r) => {
+      this.state.contract.methods.set(this.state.patientId ,file.name, dateFormat() ,result[0].hash, this.state.doctorname).send({ from: this.state.account }).then((r) => {
         return this.setState({count});
       })
     })

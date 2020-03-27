@@ -22,10 +22,12 @@ import NotFound from "./components/NotFound.js";
 import PatientUpload from "./components/Dashboard/PatientUpload.jsx";
 import PatientRecordList from "./components/Dashboard/PatientTableList.jsx";
 import PatientUserPage from "./components/Dashboard/PatientUserpage.jsx"
+import PatientView from "./components/Dashboard/PatientView.jsx"
 import DoctorUserPage from "./components/Dashboard/DoctorUserpage.jsx"
 import PatientList from "./components/Dashboard/DoctorTableList.jsx";
 import RecordList from "./components/Dashboard/RecordTableList.jsx";
 import DoctorUpload from "./components/Dashboard/DoctorUpload.jsx";
+import PermissionGrant from "./components/Dashboard/PermissionGrant.jsx";
 
 ReactDOM.render(
   <Router history={createBrowserHistory()}>
@@ -38,10 +40,12 @@ ReactDOM.render(
         <Route path="/patient/profile/:id" render={props => <PatientUserPage {...props} />} />
         <Route path="/patient/view/:id" render={props => <PatientRecordList {...props} />} />
         <Route path="/patient/upload/:id" render={props => <PatientUpload {...props} />} />
+        <Route path="/patient/grant/:id" render={props => <PatientView {...props} />} />
         <Route path="/doctor/profile/:id" render={props => <DoctorUserPage {...props} />} />
         <Route path="/doctor/view/:id" render={props => <PatientList {...props} />} />
         <Route path="/record/view/:id" render={props => <RecordList {...props} />} />
         <Route path="/record/upload/:id" render={props => <DoctorUpload {...props} />} />
+        <Route path="/permission/grant/:id" render={props => <PermissionGrant {...props} />} />
         <Route path="*" component={NotFound} />
       </Switch>*
     </Switch>

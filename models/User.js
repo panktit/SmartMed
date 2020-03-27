@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var crypto = require('crypto'); 
-
+var ethCrypto=require('eth-crypto');
 var UserSchema = new mongoose.Schema({
   account: String,
   first_name: String,
@@ -14,6 +14,7 @@ var UserSchema = new mongoose.Schema({
   blood_group: String,
   hash: String,
   salt: String,
+  list: [],
   updated_date: { type: Date, default: Date.now },
 });
 
@@ -43,5 +44,23 @@ UserSchema.methods.validPassword = function(password) {
     this.salt, 1000, 64, `sha512`).toString(`hex`); 
     return this.hash === hash; 
 }; 
+
+UserSchema.methods.generateKeyPair = function() {
+  var identity = ethCrypto.createIdentity();
+  console.log("Identity: ", identity);
+
+  var newPublicKey = identity.publicKey;
+  console.log("Public key: ", newPublicKey);
+  var newCompressed = ethCrypto.publicKey.compress(newPublicKey);
+  console.log("Compressed Public key: ", newCompressed);
+  var newPrivateKey = identity.privateKey;
+
+  console.log("Private key: ", newPrivateKey);
+  
+  // Converting private key to string
+  var strPKey = newPrivateKey.toString();
+
+  console.log("Private key to String: " ,strPKey);
+}
 
 module.exports = mongoose.model('User', UserSchema);

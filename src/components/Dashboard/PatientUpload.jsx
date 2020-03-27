@@ -6,7 +6,7 @@ import PanelHeader from "../PanelHeader.jsx";
 import Sidebar from "../Sidebar/PatientSidebar";
 import DashboardNavbar from "../Navbars/DashboardNavbar";
 import DashboardFooter from "../Footers/DashboardFooter";
-
+import axios from 'axios';
 import Web3 from 'web3';
 import Store from '../../abis/Store.json'
 import { Button } from 'reactstrap';
@@ -17,7 +17,6 @@ const ipfs = ipfsClient({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' 
 let file = "";
 let count = "";
 let userId = "";
-
 
 class Upload extends React.Component {
 
@@ -74,6 +73,13 @@ class Upload extends React.Component {
     }
   }
 
+  componentDidMount() {
+    axios.get('http://localhost:4000/api/user/'+userId)
+      .then(res => {
+        this.setState({ username: (res.data.first_name).concat(' '+res.data.last_name) })
+        console.log("Username in Patient upload: " ,this.state.username);
+    });
+  }
 
   captureFile = (event) => {
     event.preventDefault()
@@ -96,7 +102,7 @@ class Upload extends React.Component {
         console.error(error)
         return
       }
-      this.state.contract.methods.set(this.state.userId ,file.name, dateFormat() ,result[0].hash).send({ from: this.state.account }).then((r) => {
+      this.state.contract.methods.set(this.state.userId ,file.name, dateFormat() ,result[0].hash, this.state.username).send({ from: this.state.account }).then((r) => {
         return this.setState({count});
       })
     })

@@ -1,5 +1,4 @@
 import React from "react";
-import {Link} from "react-router-dom";
 import axios from "axios";
 
 // reactstrap components
@@ -9,42 +8,47 @@ import {
   CardHeader,
   CardTitle,
   Table,
+  Button,
   Row,
   Col
 } from "reactstrap";
 
 // core components
 import PanelHeader from "../PanelHeader.jsx";
-import Sidebar from "../Sidebar/DoctorSidebar";
+import Sidebar from "../Sidebar/PatientSidebar";
 import DashboardNavbar from "../Navbars/DashboardNavbar";
 import DashboardFooter from "../Footers/DashboardFooter";
 
-let doctorId = "";
+let patientId = "";
 
-class DoctorTableList extends React.Component {
+class PatientView extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      patientList: [{ }]
+      doctorList: []
     }
   }
 
   componentDidMount() {
-    // set initial list as blank
-    let patientList = [];
-    console.log("Doctor Table list props: ", this.props);
-    doctorId = this.props.match.params.id;
-    axios.get('http://localhost:4000/api/user/patients')
+    console.log("Patient View props: ", this.props);
+    patientId = this.props.match.params.id;
+    axios.get('http://localhost:4000/api/user/doctors')
       .then(res => {
-        res.data.forEach(patient => {
-          console.log("Patient: ",patient.list);
-          if(patient.list.includes(doctorId)) {
-            patientList.push(patient);
-          }
-        })
-        this.setState({ patientList });
-        console.log("Patient List: ", this.state.patientList);
+        this.setState({doctorList : res.data});
     });
+    // console.log("Doctor details list: ",this.state.doctorList);
+    // console.log("length: ",this.state.doctorList.length);
+  }
+
+  handleClick = id => {
+    alert(id);
+  };
+
+  getColor = id => {
+    if(id === '5e63702f211ade1ab0adb295')
+      return '#b81a24';
+    else
+      return 'green';
   }
 
   render() {
@@ -60,7 +64,7 @@ class DoctorTableList extends React.Component {
                 <Col xs={12}>
                   <Card>
                     <CardHeader>
-                      <CardTitle tag="h4">Patient List</CardTitle>
+                      <CardTitle tag="h4">Doctor List</CardTitle>
                     </CardHeader>
                     <CardBody>
                       <Table responsive>
@@ -68,24 +72,25 @@ class DoctorTableList extends React.Component {
                           <tr>
                             <th>First Name</th>
                             <th>Last Name</th>
-                            <th>Age</th>
-                            <th>Blood Group</th>
-                            <th>Records</th>
+                            <th>Grant / Revoke</th>
                           </tr>
                         </thead>
                         <tbody>
-                          {this.state.patientList.map(patient =>
+                          {this.state.doctorList.map(doctor =>
                             <tr>
-                              <td>{patient.first_name}</td>
-                              <td>{patient.last_name}</td>
-                              <td>{patient.age}</td>
-                              <td>{patient.blood_group}</td>
-                              <td><Link to ={{
-                                pathname: `/record/view/`+doctorId,
+                              <td>{doctor.first_name}</td>
+                              <td>{doctor.last_name}</td>
+                              <td>
+                                {/* <Link to ={{
+                                pathname: `/permission/grant/`+patientId,
                                 state: { 
-                                  pid: patient._id, 
+                                  did: doctor._id, 
                                 }
-                              }} style={{ color: '#007bff' }} className="nav-link">View</Link></td>
+                              }} style={{ color: '#007bff' }} className="nav-link">Permissions</Link>  */}
+                                <Button onClick={e => this.handleClick(doctor._id)} style={{backgroundColor:this.getColor(doctor._id)}}>
+                                  Button
+                                </Button>                                
+                              </td>
                             </tr>
                           )}
                         </tbody>
@@ -103,4 +108,4 @@ class DoctorTableList extends React.Component {
   }
 }
 
-export default DoctorTableList;
+export default PatientView;

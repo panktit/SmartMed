@@ -21,6 +21,7 @@
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dateformat": "^3.0.3",
+    "eth-crypto": "^1.5.2",
     "express": "^4.17.1",
     "history": "^4.10.1",
     "html": "^1.0.0",
