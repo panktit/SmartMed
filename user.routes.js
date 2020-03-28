@@ -42,9 +42,7 @@ router.post('/signup', (req, res, next) => {
     newUser.license = req.body.license
   } else if(newUser.userType === "patient") {
     newUser.age = req.body.age,
-    newUser.blood_group = req.body.blood_group,
-    newUser.acl.push("5e63702f211ade1ab0adb295"); // push vkgupta
-    // newUser.acl.push("5e7eeca27ee8a5382c66e872"); // push dbshah
+    newUser.blood_group = req.body.blood_group
   }
   // Call setPassword function to hash password 
   newUser.setPassword(req.body.password); 
