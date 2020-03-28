@@ -14,7 +14,7 @@ var UserSchema = new mongoose.Schema({
   blood_group: String,
   hash: String,
   salt: String,
-  list: [],
+  acl: [],
   updated_date: { type: Date, default: Date.now },
 });
 

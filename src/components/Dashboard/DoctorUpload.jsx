@@ -113,7 +113,6 @@ class Upload extends React.Component {
     
   }
   render() {
-    console.log("Upload Props: " , this.props);
     return (
       <>
         <div className="wrapper">

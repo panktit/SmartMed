@@ -63,7 +63,7 @@ class RecordList extends React.Component {
   }
 
   constructor(props) {
-    super(props)
+    super(props);
     console.log("Record Table List props: ", this.props);
     userId = this.props.location.state.pid;
     console.log("Patient id in record table list: ", userId);

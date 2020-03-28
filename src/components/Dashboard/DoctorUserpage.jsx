@@ -10,7 +10,8 @@ import {
   Form,
   Input,
   Row,
-  Col
+  Col,
+  Table
 } from "reactstrap";
 
 // core components
@@ -26,7 +27,8 @@ class User extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: {}
+      user: {},
+      patientCount: 0,
     }
   }
 
@@ -37,6 +39,19 @@ class User extends React.Component {
       .then(res => {
         this.setState({ user: res.data });
         console.log("User state in Doctor user page: " ,this.state.user);
+    });
+
+    let patientCount = 0;
+    axios.get('http://localhost:4000/api/user/patients')
+      .then(res => {
+        res.data.forEach(patient => {
+          console.log("Patient: ",patient.list);
+          if(patient.acl.includes(doctorID)) {
+            patientCount++;
+          }
+        })
+        this.setState({ patientCount });
+        console.log("Patient Count: ", this.state.patientCount);
     });
   }
   render() {
@@ -137,14 +152,19 @@ class User extends React.Component {
                 <Col md="4">
                   <Card className="card-user">
                     <CardBody>
-                      <Row>
-                      <Col className="pl-1" md="6">
-                        Documents Uploaded
-                      </Col>
-                      <Col className="pr-1" md="6">
-                        23
-                      </Col>
-                      </Row>
+                    <Table responsive>
+                        <thead className="text-primary">
+                          <tr>
+                            <th>Statistics</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                              <td>Number of Accessible Patients</td>
+                              <td style={{color: "#007bff"}}>{this.state.patientCount}</td>
+                            </tr>
+                        </tbody>
+                      </Table>
                     </CardBody>
                   </Card>
                 </Col>

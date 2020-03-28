@@ -1,4 +1,3 @@
-/*eslint-disable*/
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { Nav } from "reactstrap";
@@ -22,7 +21,6 @@ class Sidebar extends React.Component {
   componentDidMount() {
     console.log("Patient Sidebar props: ", this.props);
     patientId = this.props.match.params.id;
-    console.log("Patient id Sidebar props: ", patientId);
     if (navigator.platform.indexOf("Win") > -1) {
       ps = new PerfectScrollbar(this.refs.sidebar, {
         suppressScrollX: true,
@@ -106,8 +104,8 @@ class Sidebar extends React.Component {
                     className="nav-link"
                     activeClassName="active"
                   >
-                    <i className="now-ui-icons files_paper" />
-                    <p>View Doctors</p>
+                    <i className="now-ui-icons objects_key-25" />
+                    <p>Permissions</p>
                   </NavLink>
                 </li>
           </Nav>

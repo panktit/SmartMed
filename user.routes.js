@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
-var User = require('../models/User.js');
+var User = require('./user.model.js');
 
 
 // User login api 
@@ -18,7 +18,7 @@ router.post('/login', (req, res) => {
     } 
     else { 
       return res.send({
-          message : "Incorrect Password"
+        message : "Incorrect Password"
       }); 
     } 
   }); 
@@ -43,8 +43,8 @@ router.post('/signup', (req, res, next) => {
   } else if(newUser.userType === "patient") {
     newUser.age = req.body.age,
     newUser.blood_group = req.body.blood_group,
-    newUser.list.push("5e63702f211ade1ab0adb295");
-    // newUser.list.push("5e7e3725d0500b0c2c6faef7");
+    newUser.acl.push("5e63702f211ade1ab0adb295"); // push vkgupta
+    // newUser.acl.push("5e7eeca27ee8a5382c66e872"); // push dbshah
   }
   // Call setPassword function to hash password 
   newUser.setPassword(req.body.password); 
@@ -85,14 +85,6 @@ router.get('/doctors', function(req, res, next) {
 /* GET SINGLE USER BY ID */
 router.get('/:id', function(req, res, next) {
   User.findById(req.params.id, function (err, post) {
-    if (err) return next(err);
-    res.json(post);
-  });
-});
-
-// GET ONLY BASIC INFO FOR A DOCTOR
-router.get('/doctors/:id', function(req, res, next) {
-  User.find({"_id": req.params.id},{first_name: 1, last_name: 1}, function (err, post) {
     if (err) return next(err);
     res.json(post);
   });

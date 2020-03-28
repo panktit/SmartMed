@@ -38,7 +38,7 @@ class DoctorTableList extends React.Component {
       .then(res => {
         res.data.forEach(patient => {
           console.log("Patient: ",patient.list);
-          if(patient.list.includes(doctorId)) {
+          if(patient.acl.includes(doctorId)) {
             patientList.push(patient);
           }
         })

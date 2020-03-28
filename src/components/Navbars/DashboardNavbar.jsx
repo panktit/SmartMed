@@ -62,11 +62,9 @@ class Header extends React.Component {
     window.addEventListener("resize", this.updateColor.bind(this));
     console.log("Navbar props: " ,this.props);
     userId = this.props.match.params.id;
-    console.log("User in navbar: " ,userId);
     axios.get('http://localhost:4000/api/user/'+userId)
     .then(res => {
       userType = res.data.userType;
-      console.log("User type in dashboard navbar: " ,userType);
   });
   }
   componentDidUpdate(e) {

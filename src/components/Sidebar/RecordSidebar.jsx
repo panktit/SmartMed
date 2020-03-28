@@ -1,4 +1,3 @@
-/*eslint-disable*/
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { Nav } from "reactstrap";
@@ -24,7 +23,6 @@ class Sidebar extends React.Component {
     console.log("Record Sidebar props: ", this.props);
     doctorId = this.props.match.params.id;
     patientId = this.props.location.state.pid;
-    console.log("Doctor State Record Sidebar props: ", doctorId);
     if (navigator.platform.indexOf("Win") > -1) {
       ps = new PerfectScrollbar(this.refs.sidebar, {
         suppressScrollX: true,
@@ -100,15 +98,15 @@ class Sidebar extends React.Component {
 
                 <li
                   className={
-                    this.activeRoute("/doctor/profile")}
+                    this.activeRoute("/doctor/view")}
                 >
                   <NavLink {...this.props}
-                    to={'/doctor/profile/'+doctorId}
+                    to={'/doctor/view/'+doctorId}
                     className="nav-link"
                     activeClassName="active"
                   >
                     <i className="now-ui-icons arrows-1_minimal-left" />
-                    <p>Back to My Profile</p>
+                    <p>Back to Patient List</p>
                   </NavLink>
                 </li>
             </Nav>

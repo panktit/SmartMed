@@ -20,35 +20,91 @@ import DashboardNavbar from "../Navbars/DashboardNavbar";
 import DashboardFooter from "../Footers/DashboardFooter";
 
 let patientId = "";
+let patient = {};
 
 class PatientView extends React.Component {
+
   constructor(props) {
     super(props)
     this.state = {
-      doctorList: []
+      doctorList: [],
+      patient: {}
     }
+    console.log("Patient View props: ", this.props);
+    patientId = this.props.match.params.id;
   }
 
   componentDidMount() {
-    console.log("Patient View props: ", this.props);
-    patientId = this.props.match.params.id;
     axios.get('http://localhost:4000/api/user/doctors')
       .then(res => {
-        this.setState({doctorList : res.data});
-    });
-    // console.log("Doctor details list: ",this.state.doctorList);
-    // console.log("length: ",this.state.doctorList.length);
+          this.setState({doctorList : res.data});
+      })
+      console.log("Doctor List: ", this.state.doctorList);
+    
+    // get patient details
+    axios.get('http://localhost:4000/api/user/'+patientId)
+    .then(res => {
+        patient = res.data;
+        this.setState({patient : res.data});
+      })
   }
 
-  handleClick = id => {
-    alert(id);
+  handleClick = doctor => {
+    if(patient.acl.includes(doctor._id)) {
+      if(window.confirm("Are you sure you want to revoke access from "+doctor.first_name+ " "+ doctor.last_name+"?")) {
+        // make changes
+        patient.acl.splice(patient.acl.indexOf(doctor._id), 1 );
+        console.log("Patient after deleting: ", patient);
+
+        // make axios update request
+        axios.put('http://localhost:4000/api/user/'+patientId, patient)
+        .then(res => {
+          this.setState({patient: res.data});
+        })
+      } else {
+        // do nothing
+        alert("Not Revoked!");
+      } 
+    }
+    else
+      if(window.confirm("Are you sure you want to grant access to "+doctor.first_name+ " "+ doctor.last_name+"?")) {
+        // make changes
+        patient.acl.push(doctor._id);
+        console.log("Patient after adding: ",patient);
+
+        // make axios update request
+        axios.put('http://localhost:4000/api/user/'+patientId, patient)
+        .then(res => {
+          this.setState({patient: res.data});
+        })
+      } else {
+        // do nothing
+        alert("Not Granted!");
+      }
   };
 
   getColor = id => {
-    if(id === '5e63702f211ade1ab0adb295')
-      return '#b81a24';
-    else
-      return 'green';
+    console.log("Patient state in get color: " ,this.state.patient);
+    console.log("Patient in get color: " , patient);
+    if(JSON.stringify(patient) === '{}')
+      return '#666';
+    else {
+      if(patient.acl.includes(id))
+        return '#b81a24';
+      else
+        return 'green';
+    }
+  }
+
+  getPermission = id => {
+    if(JSON.stringify(patient) === '{}')
+      return 'Button';
+    else {
+      if(patient.acl.includes(id))
+        return 'Revoke';
+      else
+        return 'Grant';
+    }
   }
 
   render() {
@@ -87,8 +143,8 @@ class PatientView extends React.Component {
                                   did: doctor._id, 
                                 }
                               }} style={{ color: '#007bff' }} className="nav-link">Permissions</Link>  */}
-                                <Button onClick={e => this.handleClick(doctor._id)} style={{backgroundColor:this.getColor(doctor._id)}}>
-                                  Button
+                                <Button onClick={e => this.handleClick(doctor)} style={{backgroundColor:this.getColor(doctor._id)}}>
+                                  {this.getPermission(doctor._id)}
                                 </Button>                                
                               </td>
                             </tr>

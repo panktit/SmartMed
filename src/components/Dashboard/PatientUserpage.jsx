@@ -1,5 +1,7 @@
 import React from "react";
 import axios from "axios";
+import Web3 from 'web3';
+import Store from '../../abis/Store.json'
 
 // reactstrap components
 import {
@@ -10,7 +12,8 @@ import {
   Form,
   Input,
   Row,
-  Col
+  Col,
+  Table
 } from "reactstrap";
 
 // core components
@@ -20,13 +23,58 @@ import DashboardNavbar from "../Navbars/DashboardNavbar";
 import DashboardFooter from "../Footers/DashboardFooter";
 
 let patientID = "";
+let docsCount = "";
 
 class User extends React.Component {
+
+  async componentWillMount() {
+    await this.loadWeb3()
+    await this.loadBlockchainData()
+  }
+
+  async loadWeb3() {
+    if (window.ethereum) {
+      window.web3 = new Web3(window.ethereum)
+      await window.ethereum.enable()
+    }
+    else if (window.web3) {
+      window.web3 = new Web3(window.web3.currentProvider)
+    }
+    else {
+      window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
+    }
+  }
+
+  async loadBlockchainData() {
+    const web3 = window.web3
+    // Load userId
+    
+    // Load account
+    const accounts = await web3.eth.getAccounts()
+    console.log("User id: ", this.state.user._id);
+    this.setState({ account: accounts[0] })
+    const networkId = await web3.eth.net.getId()
+    const networkData = Store.networks[networkId]
+    if(networkData) {
+      const contract = web3.eth.Contract(Store.abi, networkData.address)
+      this.setState({ contract })
+      docsCount = await this.state.contract.methods.getCount(this.state.user._id).call()
+      this.setState({docsCount : parseInt(docsCount._hex)})
+      console.log("Count: ", this.state.docsCount);
+    } else {
+      window.alert('Smart contract not deployed to detected network.')
+    }
+  }
 
     constructor(props) {
       super(props);
       this.state = {
-        user: {}
+        user: {},
+        doctorCount: 0,
+        docsCount: "",
+        contract: null,
+        web3: null,
+        account: null,
       }
     }
 
@@ -36,6 +84,7 @@ class User extends React.Component {
       axios.get('http://localhost:4000/api/user/'+patientID)
         .then(res => {
           this.setState({ user: res.data });
+          this.setState({doctorCount: res.data.acl.length});
           console.log("User state in Patient user page: " ,this.state.user);
       });
     }
@@ -132,14 +181,23 @@ class User extends React.Component {
                 <Col md="4">
                   <Card className="card-user">
                     <CardBody>
-                      <Row>
-                      <Col className="pl-1" md="6">
-                        Documents Uploaded
-                      </Col>
-                      <Col className="pr-1" md="6">
-                        23
-                      </Col>
-                      </Row>
+                      <Table responsive>
+                        <thead className="text-primary">
+                          <tr>
+                            <th>Statistics</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>Number of Permitted Doctors</td>
+                            <td style={{color: "#007bff"}}>{this.state.doctorCount}</td>
+                          </tr>
+                          <tr>
+                            <td>Number of Documents</td>
+                            <td style={{color: "#007bff"}}>{this.state.docsCount}</td>
+                          </tr>
+                        </tbody>
+                      </Table>
                     </CardBody>
                   </Card>
                 </Col>
