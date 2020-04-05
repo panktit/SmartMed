@@ -11,9 +11,11 @@ import Web3 from 'web3';
 import Store from '../../abis/Store.json'
 import { Button } from 'reactstrap';
 var dateFormat = require('dateformat');
+var encryption = require('../encryption.js');
 
 const ipfsClient = require('ipfs-http-client')
 const ipfs = ipfsClient({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' }) // leaving out the arguments will default to these values
+
 let file = "";
 let count = "";
 let userId = "";
@@ -70,14 +72,20 @@ class Upload extends React.Component {
       account: null,
       userId: "",
       count: "",
+      secretKey: "",
+      privateKey: "",
+      iv: "",
     }
   }
 
   componentDidMount() {
     axios.get('http://localhost:4000/api/user/'+userId)
       .then(res => {
-        this.setState({ username: (res.data.first_name).concat(' '+res.data.last_name) })
+        this.setState({ username: res.data.first_name+' '+res.data.last_name, privateKey: res.data.privateKey, secretKey: res.data.secretKey, iv: res.data.iv })
         console.log("Username in Patient upload: " ,this.state.username);
+        console.log("Secret Key: " ,this.state.secretKey);
+        console.log("Private Key: " ,this.state.privateKey);
+        console.log("IV: " ,this.state.iv);
     });
   }
 
@@ -95,8 +103,22 @@ class Upload extends React.Component {
 
   onSubmit = (event) => {
     event.preventDefault()
+    var blob = new Blob([this.state.buffer], {'type': 'image/jpg'});
+    console.log("blob url: " ,URL.createObjectURL(blob));
+    console.log("Encrypting the captured file...")
+    // encrypt this.state.buffer
+    const decryptedKey = encryption.decryptRSA(this.state.secretKey, this.state.privateKey);
+    
+    const endata = encryption.callEncrypt(this.state.buffer, decryptedKey);
+    let testBuffer = new Buffer(endata);
+
+    // console.log("Encrypted string: ",endata.encryptedData);
+    // const enbuffer = Buffer.from(endata.encryptedData ,'binary');
+    // console.log("Encrypted buffer: ",enbuffer);
+    
+    // add encrypted buffer to ipfs
     console.log("Submitting file to ipfs...")
-    ipfs.add(this.state.buffer, (error, result) => {
+    ipfs.add(testBuffer, (error, result) => {
       console.log('Ipfs result', result)
       if(error) {
         console.error(error)
@@ -106,7 +128,6 @@ class Upload extends React.Component {
         return this.setState({count});
       })
     })
-    
   }
   render() {
     return (

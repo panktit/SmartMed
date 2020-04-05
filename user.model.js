@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var crypto = require('crypto'); 
-var ethCrypto=require('eth-crypto');
+var cryptico = require('cryptico');
 var UserSchema = new mongoose.Schema({
   account: String,
   first_name: String,
@@ -15,18 +15,21 @@ var UserSchema = new mongoose.Schema({
   hash: String,
   salt: String,
   acl: [],
+  publicKey: String,
+  privateKey: String,
+  secretKey: String,
+  iv: String,
   updated_date: { type: Date, default: Date.now },
 });
 
-UserSchema.methods.setPassword = function(password) { 
-     
-// Creating a unique salt for a particular user 
-    this.salt = crypto.randomBytes(16).toString('hex'); 
-  
-    // Hashing user's salt and password with 1000 iterations, 
-    // 64 length and sha512 digest 
-    this.hash = crypto.pbkdf2Sync(password, this.salt,  
-    1000, 64, `sha512`).toString(`hex`); 
+UserSchema.methods.setPassword = function(password) {    
+  // Creating a unique salt for a particular user 
+  this.salt = crypto.randomBytes(16).toString('hex'); 
+
+  // Hashing user's salt and password with 1000 iterations, 
+  // 64 length and sha512 digest 
+  this.hash = crypto.pbkdf2Sync(password, this.salt,  
+  1000, 64, `sha512`).toString(`hex`); 
 }; 
    
  // Method to check the entered password is correct or not 
@@ -40,27 +43,27 @@ UserSchema.methods.setPassword = function(password) {
  // If the user's hash is equal to generated hash  
  // then the password is correct otherwise not 
 UserSchema.methods.validPassword = function(password) { 
-    var hash = crypto.pbkdf2Sync(password,  
-    this.salt, 1000, 64, `sha512`).toString(`hex`); 
-    return this.hash === hash; 
-}; 
+  var hash = crypto.pbkdf2Sync(password,  
+  this.salt, 1000, 64, `sha512`).toString(`hex`); 
+  return this.hash === hash; 
+};
 
 UserSchema.methods.generateKeyPair = function() {
-  var identity = ethCrypto.createIdentity();
-  console.log("Identity: ", identity);
-
-  var newPublicKey = identity.publicKey;
-  console.log("Public key: ", newPublicKey);
-  var newCompressed = ethCrypto.publicKey.compress(newPublicKey);
-  console.log("Compressed Public key: ", newCompressed);
-  var newPrivateKey = identity.privateKey;
-
-  console.log("Private key: ", newPrivateKey);
+  console.log("Function called!");
+  var PassPhrase = "The Moon is a Harsh Mistress."; 
+  // The length of the RSA key, in bits.
+  var Bits = 1024; 
   
-  // Converting private key to string
-  var strPKey = newPrivateKey.toString();
-
-  console.log("Private key to String: " ,strPKey);
+  var MattsRSAkey = cryptico.generateRSAKey(PassPhrase, Bits);
+  var MattsPublicKeyString = cryptico.publicKeyString(MattsRSAkey);    
+  console.log("RSA Keys : ", MattsPublicKeyString);   
+  var PlainText = "Matt, I need you to help me with my Starcraft strategy.";
+  
+  var EncryptionResult = cryptico.encrypt(PlainText, MattsPublicKeyString);
+  console.log("Encryption Result: ", EncryptionResult);
+  
+  var DecryptionResult = cryptico.decrypt(EncryptionResult.cipher, MattsRSAkey);
+  console.log("Decryption Result: ", DecryptionResult.plaintext);
 }
 
 module.exports = mongoose.model('User', UserSchema);

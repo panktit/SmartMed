@@ -9,6 +9,16 @@ contract Store {
     string by;
   }
   mapping(string => Record[]) medicalHistory;
+  mapping(string => string) secretKey;
+
+  function setKey(string memory _id, string memory _encryptedKey) public {
+    secretKey[_id] = _encryptedKey;
+  }
+
+  function getKey(string memory _id) public view returns (string memory) {
+    return secretKey[_id];
+  }
+
   function set(string memory _id, string memory _fileName, string memory _date, string memory _fileHash, string memory _by) public {
     medicalHistory[_id].push(Record(_fileName,_date,_fileHash,_by));
   }

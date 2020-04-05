@@ -1,8 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var mongoose = require('mongoose');
 var User = require('./user.model.js');
-
+var encryption = require('./src/components/encryption.js');
 
 // User login api 
 router.post('/login', (req, res) => { 
@@ -29,6 +28,12 @@ router.post('/signup', (req, res, next) => {
    
 // Creating empty user object 
   let newUser = new User(); 
+  
+  // Generate RSA keys for the new user
+  const keys = encryption.generateRSAKeys();
+  newUser.publicKey = keys.public
+  newUser.privateKey = keys.private
+  console.log("After generation: ",newUser);
 
   // Initialize newUser object with request data
   newUser.first_name = req.body.first_name,
@@ -43,15 +48,32 @@ router.post('/signup', (req, res, next) => {
   } else if(newUser.userType === "patient") {
     newUser.age = req.body.age,
     newUser.blood_group = req.body.blood_group
+
+    // aes secret key
+    const userdata = encryption.generateSecretKey();
+    newUser.iv = userdata.iv.toString('binary');
+
+    // Encrypt the secret key using rsa public key
+    console.log("To string secretkey: ", userdata.secretKey.toString('binary'));
+    newUser.secretKey = encryption.encryptRSA(userdata.secretKey.toString('binary'), newUser.publicKey);
+
+    console.log("---- TESTING AES ----");
+    decryptedKey = encryption.decryptRSA(newUser.secretKey, newUser.privateKey);
+    const keybuffer = Buffer.from(decryptedKey, 'binary');
+    const iv = Buffer.from(newUser.iv, 'binary')
+
+    const endata = encryption.encryptAES("Pankti Thakkar", keybuffer, iv);
+    console.log("Enc data: ",endata);
+    console.log("Decrypted: ",encryption.decryptAES(endata.encryptedData, keybuffer, Buffer.from(newUser.iv, 'binary')));
   }
   // Call setPassword function to hash password 
-  newUser.setPassword(req.body.password); 
-  newUser.generateKeyPair();
-  // Save newUser object to database 
+  newUser.setPassword(req.body.password);
+
+  // Save newUser object to database
   User.create(newUser ,function(err, post) { 
     if (err) return next(err); 
     res.json(post);
-  }); 
+  });
 }); 
 
 
