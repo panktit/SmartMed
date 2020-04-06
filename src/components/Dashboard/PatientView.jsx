@@ -18,6 +18,7 @@ import PanelHeader from "../PanelHeader.jsx";
 import Sidebar from "../Sidebar/PatientSidebar";
 import DashboardNavbar from "../Navbars/DashboardNavbar";
 import DashboardFooter from "../Footers/DashboardFooter";
+const encryption = require('../encryption.js');
 
 let patientId = "";
 let patient = {};
@@ -56,10 +57,23 @@ class PatientView extends React.Component {
         patient.acl.splice(patient.acl.indexOf(doctor._id), 1 );
         console.log("Patient after deleting: ", patient);
 
+        for (var n = 0 ; n < doctor.acl.length ; n++) {
+          if (doctor.acl[n].pid === patient._id) {
+            doctor.acl.splice(n,1);
+            break;
+          }
+        }
+
         // make axios update request
         axios.put('http://localhost:4000/api/user/'+patientId, patient)
         .then(res => {
           this.setState({patient: res.data});
+        })
+
+        // make axios update request
+        axios.put('http://localhost:4000/api/user/'+doctor._id, doctor)
+        .then(res => {
+          console.log("Doctor updated: ",res.data);
         })
       } else {
         // do nothing
@@ -71,17 +85,29 @@ class PatientView extends React.Component {
         // make changes
         patient.acl.push(doctor._id);
         console.log("Patient after adding: ",patient);
+        const rencKey = this.reEncrypt(patient.secretKey, doctor.publicKey);
+        doctor.acl.push({pid: patient._id, encKey: rencKey});
 
         // make axios update request
         axios.put('http://localhost:4000/api/user/'+patientId, patient)
         .then(res => {
           this.setState({patient: res.data});
         })
+        axios.put('http://localhost:4000/api/user/'+doctor._id, doctor)
+        .then(res => {
+          console.log("Doctor updated: ",res.data);
+        })
       } else {
         // do nothing
         alert("Not Granted!");
       }
   };
+
+  reEncrypt(secretKey, publicKey) {
+    const decryptedKey = encryption.decryptRSA(secretKey, this.state.patient.privateKey);
+    const dcEncrypted = encryption.encryptRSA(decryptedKey, publicKey)
+    return dcEncrypted;
+  }
 
   getColor = id => {
     console.log("Patient state in get color: " ,this.state.patient);

@@ -11,6 +11,7 @@ import Web3 from 'web3';
 import Store from '../../abis/Store.json'
 import { Button } from 'reactstrap';
 var dateFormat = require('dateformat');
+var encryption = require('../encryption.js');
 
 const ipfsClient = require('ipfs-http-client')
 const ipfs = ipfsClient({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' }) // leaving out the arguments will default to these values
@@ -18,6 +19,7 @@ let file = "";
 let count = "";
 let patientId = "";
 let doctorId="";
+let encKey="";
 
 class Upload extends React.Component {
 
@@ -43,6 +45,7 @@ class Upload extends React.Component {
     const web3 = window.web3
     // Load patientId
     this.setState({patientId});
+    this.setState({encKey});
     // Load account
     const accounts = await web3.eth.getAccounts()
     console.log("User id: ", this.state.patientId);
@@ -63,14 +66,17 @@ class Upload extends React.Component {
   constructor(props) {
     super(props)
     console.log("Props in doctor file upload: ",this.props);
+    encKey = this.props.location.state.encKey;
     patientId = this.props.location.state.pid;
-    doctorId= this.props.match.params.id;
+    doctorId = this.props.match.params.id;
     this.state = {
       contract: null,
       web3: null,
       buffer: null,
       account: null,
       patientId: "",
+      encKey: "",
+      privateKey: "",
       count: "",
       doctorId: "",
       doctorname: "",
@@ -80,8 +86,9 @@ class Upload extends React.Component {
   componentDidMount() {
     axios.get('http://localhost:4000/api/user/'+doctorId)
       .then(res => {
-        this.setState({ doctorname: res.data.first_name+' '+res.data.last_name })
+        this.setState({ doctorname: res.data.first_name+' '+res.data.last_name, privateKey: res.data.privateKey })
         console.log("Username in Doctor upload: " ,this.state.doctorname);
+        console.log("Private Key: " ,this.state.privateKey);
     });
   }
 
@@ -99,8 +106,22 @@ class Upload extends React.Component {
 
   onSubmit = (event) => {
     event.preventDefault()
+    var blob = new Blob([this.state.buffer], {'type': 'image/jpg'});
+    console.log("blob url: " ,URL.createObjectURL(blob));
+    console.log("Encrypting the captured file...")
+    // encrypt this.state.buffer
+    const decryptedKey = encryption.decryptRSA(this.state.encKey, this.state.privateKey);
+    
+    const endata = encryption.callEncrypt(this.state.buffer, decryptedKey);
+    let testBuffer = new Buffer(endata);
+
+    // console.log("Encrypted string: ",endata.encryptedData);
+    // const enbuffer = Buffer.from(endata.encryptedData ,'binary');
+    // console.log("Encrypted buffer: ",enbuffer);
+    
+    // add encrypted buffer to ipfs
     console.log("Submitting file to ipfs...")
-    ipfs.add(this.state.buffer, (error, result) => {
+    ipfs.add(testBuffer, (error, result) => {
       console.log('Ipfs result', result)
       if(error) {
         console.error(error)

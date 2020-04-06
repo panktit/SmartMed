@@ -1,6 +1,7 @@
 import React from "react";
 import Web3 from 'web3';
 import Store from '../../abis/Store.json'
+import axios from 'axios'
 
 // reactstrap components
 import {
@@ -10,7 +11,8 @@ import {
   CardTitle,
   Table,
   Row,
-  Col
+  Col,
+  Button
 } from "reactstrap";
 
 // core components
@@ -18,13 +20,27 @@ import PanelHeader from "../PanelHeader.jsx";
 import Sidebar from "../Sidebar/RecordSidebar";
 import DashboardNavbar from "../Navbars/DashboardNavbar";
 import DashboardFooter from "../Footers/DashboardFooter";
+import Modal from '../Modal'; 
+
+const encryption = require('../encryption.js');
+const ipfsClient = require('ipfs-http-client')
+const ipfs = ipfsClient({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' }) // leaving out the arguments will default to these values
 
 let medicalHistory = [];
-let userId = "";
+let doctorId = "";
+let patientId = "";
+let encKey = "";
 
 class RecordList extends React.Component {
 
   async componentWillMount() {
+    axios.get('http://localhost:4000/api/user/'+doctorId)
+      .then(res => {
+        this.setState({ privateKey: res.data.privateKey })
+        // console.log("Secret Key: " ,this.state.secretKey);
+        // console.log("Private Key: " ,typeof this.state.privateKey);
+        // console.log("IV: " ,this.state.iv);
+    });
     await this.loadWeb3()
     await this.loadBlockchainData()
   }
@@ -44,8 +60,12 @@ class RecordList extends React.Component {
 
   async loadBlockchainData() {
     const web3 = window.web3
-    // Load userId
-    this.setState({userId});
+    
+    // Load patientId
+    this.setState({doctorId});
+    this.setState({patientId});
+    this.setState({encKey});
+    
     // Load account
     const accounts = await web3.eth.getAccounts()
     this.setState({ account: accounts[0] })
@@ -54,24 +74,68 @@ class RecordList extends React.Component {
     if(networkData) {
       const contract = web3.eth.Contract(Store.abi, networkData.address)
       this.setState({ contract })
-      medicalHistory = await contract.methods.get(this.state.userId).call()
+      medicalHistory = await contract.methods.get(this.state.patientId).call()
       this.setState({ medicalHistory })
       console.log("Medical History: ", medicalHistory);
+      this.setState({medicalHistory: await Promise.all(medicalHistory.map(record => this.getIPFSData(record)))})
+      console.log("Ipfs data state list responses : ",this.state.medicalHistory);
+      this.setState({medicalHistory: medicalHistory.map(record => this.getFile(record))})
+      console.log("Ipfs data state list responses : ",this.state.medicalHistory);
     } else {
       window.alert('Smart contract not deployed to detected network.')
     }
   }
 
+  async getIPFSData(record) {
+    console.log("Function called for : ", record.fileName);
+    const data = await ipfs.cat(record.fileHash)
+    // data is returned as a Buffer, conver it back to a string
+    console.log("ipfs data for ",record.fileName);
+    record.data = data;
+    return record;
+  }
+
+  getFile(record) {
+    // get rsa private key
+    console.log("get file function called for: ",record.fileName);
+    const decryptedKey = encryption.decryptRSA(this.state.encKey, this.state.privateKey);
+
+    const byteArray = encryption.callDecrypt(record.data, decryptedKey);
+    console.log("byte array dec: ",byteArray);
+    var arrayBufferView = new Uint8Array(byteArray);
+    var blob = new Blob( [ arrayBufferView ], { type: 'image/jpg' } );
+
+    // const dcdata = encryption.decryptAES(record.data.toString('binary'), keybuffer, iv);
+    // console.log("Decrypted string: ",typeof dcdata);
+    // record.file = Buffer.from(dcdata, 'binary');
+    // var blob = new Blob([record.file], {'type': 'image/jpg'});
+    record.url = URL.createObjectURL(blob);
+    return record;
+    // const enbuffer = Buffer.from(endata.encryptedData ,'binary');
+    // console.log("Encrypted buffer: ",enbuffer);
+    // decrypt secret key
+    // use secret key to decrypt record.data
+    // convert string to buffer
+    // convert buffer to file
+    // store in record.file
+    // return record
+  }
+
   constructor(props) {
     super(props);
     console.log("Record Table List props: ", this.props);
-    userId = this.props.location.state.pid;
-    console.log("Patient id in record table list: ", userId);
+    doctorId = this.props.match.params.id;
+    patientId = this.props.location.state.pid;
+    encKey = this.props.location.state.encKey;
+    console.log("Patient id in record table list: ", patientId);
+    console.log("enc key in record table list: ", encKey);
     this.state = {
       contract: null,
       web3: null,
       account: null,
-      userId: "",
+      doctorId: "",
+      patientId: "",
+      encKey: "",
       medicalHistory: []
     }
   }
@@ -86,7 +150,7 @@ class RecordList extends React.Component {
             <PanelHeader size="sm" />
             <div className="content">
               <Row>
-                <Col xs={8}>
+                <Col xs={10}>
                   <Card>
                     <CardHeader>
                       <CardTitle tag="h4">Uploaded Records</CardTitle>
@@ -98,14 +162,16 @@ class RecordList extends React.Component {
                             <th>Name</th>
                             <th>Uploaded On</th>
                             <th>Uploaded By</th>
+                            <th></th>
                           </tr>
                         </thead>
                         <tbody>
                           {this.state.medicalHistory.map(record =>
                             <tr>
-                              <td><a style={{ color: '#007bff' }}href={'https://ipfs.infura.io/ipfs/'+record.fileHash} target="_blank" rel="noopener noreferrer">{record.fileName} </a></td>
+                              <td>{record.fileName}</td>
                               <td>{record.date}</td>
                               <td>{record.by}</td>
+                              <td><a style={{ color: '#007bff' }} href={record.url} target="_blank" rel="noopener noreferrer">View</a></td>
                             </tr>
                           )}
                         </tbody>

@@ -9,6 +9,7 @@ import logo from "../../assets/img/tsmfavicon.png";
 var ps;
 let doctorId = "";
 let patientId = "";
+let encKey = "";
 
 class Sidebar extends React.Component {
   constructor(props) {
@@ -23,6 +24,7 @@ class Sidebar extends React.Component {
     console.log("Record Sidebar props: ", this.props);
     doctorId = this.props.match.params.id;
     patientId = this.props.location.state.pid;
+    encKey = this.props.location.state.encKey;
     if (navigator.platform.indexOf("Win") > -1) {
       ps = new PerfectScrollbar(this.refs.sidebar, {
         suppressScrollX: true,
@@ -66,7 +68,8 @@ class Sidebar extends React.Component {
                     to ={{
                         pathname: `/record/view/`+doctorId,
                         state: { 
-                            pid: patientId, 
+                          pid: patientId, 
+                          encKey: encKey,
                         }
                     }}
                     className="nav-link"
@@ -85,7 +88,8 @@ class Sidebar extends React.Component {
                     to ={{
                         pathname: `/record/upload/`+doctorId,
                         state: { 
-                            pid: patientId, 
+                          pid: patientId,
+                          encKey: encKey,
                         }
                     }}
                     className="nav-link"

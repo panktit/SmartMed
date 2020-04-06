@@ -68,10 +68,10 @@ router.post('/signup', (req, res, next) => {
   }
   // Call setPassword function to hash password 
   newUser.setPassword(req.body.password);
-
+  
   // Save newUser object to database
   User.create(newUser ,function(err, post) { 
-    if (err) return next(err); 
+    if (err) return next(err);
     res.json(post);
   });
 }); 

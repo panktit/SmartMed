@@ -19,7 +19,7 @@ import PanelHeader from "../PanelHeader.jsx";
 import Sidebar from "../Sidebar/PatientSidebar";
 import DashboardNavbar from "../Navbars/DashboardNavbar";
 import DashboardFooter from "../Footers/DashboardFooter";
-import Modal from '../Modal'; 
+import Modal from '../Modal';
 
 const encryption = require('../encryption.js');
 const ipfsClient = require('ipfs-http-client')
@@ -79,6 +79,7 @@ class PatientTableList extends React.Component {
       window.alert('Smart contract not deployed to detected network.')
     }
   }
+
   async getIPFSData(record) {
     console.log("Function called for : ", record.fileName);
     const data = await ipfs.cat(record.fileHash)
@@ -218,11 +219,11 @@ class PatientTableList extends React.Component {
                         <tbody>
                           {this.state.medicalHistory.map(record =>
                             <tr>
-                              <td><a style={{ color: '#007bff' }} href={record.url} target="_blank" rel="noopener noreferrer">{record.fileName} </a></td>
+                              <td>{record.fileName}</td>
                               <td>{record.date}</td>
                               <td>{record.by}</td>
                               <td>
-                                <Button
+                                {/* <Button
                                   color='info'
                                   size='sm'
                                   onClick={() => this.handleToggleModal()}
@@ -233,7 +234,8 @@ class PatientTableList extends React.Component {
                                 
                                 <Modal onCloseRequest={() => this.handleToggleModal()}>
                                   <img alt="record" src={record.url} />
-                                </Modal>}
+                                </Modal>} */}
+                                <a style={{ color: '#007bff' }} href={record.url} target="_blank" rel="noopener noreferrer">View</a>
                               </td>
                             </tr>
                           )}

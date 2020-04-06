@@ -20,12 +20,13 @@ import DashboardNavbar from "../Navbars/DashboardNavbar";
 import DashboardFooter from "../Footers/DashboardFooter";
 
 let doctorId = "";
-
+let doctor = {};
 class DoctorTableList extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      patientList: [{ }]
+      patientList: [],
+      doctor: {}
     }
   }
 
@@ -36,18 +37,40 @@ class DoctorTableList extends React.Component {
     doctorId = this.props.match.params.id;
     axios.get('http://localhost:4000/api/user/patients')
       .then(res => {
-        res.data.forEach(patient => {
-          console.log("Patient: ",patient.list);
-          if(patient.acl.includes(doctorId)) {
-            patientList.push(patient);
-          }
-        })
-        this.setState({ patientList });
-        console.log("Patient List: ", this.state.patientList);
-    });
+          this.setState({patientList : res.data});
+      })
+    console.log("Doctor List: ", this.state.patientList);
+    axios.get('http://localhost:4000/api/user/'+doctorId)
+    .then(res => {
+        doctor = res.data;
+        this.setState({doctor: res.data});
+      })
+    console.log("Doctor in doctor table list: ", this.state.doctor);
   }
-
+  getData = id => {
+    if(JSON.stringify(doctor) === '{}')
+      return (<p>Loading...</p>);
+    else {
+      const pid = obj => obj.pid === id;
+      if(doctor.acl.some(pid)) {
+        var result = doctor.acl.filter(obj => {
+          return obj.pid === id
+        })
+        console.log("Result: ",result[0]);
+        return (<Link to ={{
+          pathname: `/record/view/`+doctorId,
+          state: { 
+            pid: id,
+            encKey: result[0].encKey
+          }
+        }} style={{ color: '#007bff' }} className="nav-link">View</Link>);
+      }
+      else
+        return (<p style={{ color: '#f01a1a', fontWeight: 'bold' }}>  Access Restricted</p>);
+    }
+  }
   render() {
+    console.log("Doctor in doctor table list: ", typeof this.state.doctor.acl);
     return (
       <>
         <div className="wrapper">
@@ -80,12 +103,7 @@ class DoctorTableList extends React.Component {
                               <td>{patient.last_name}</td>
                               <td>{patient.age}</td>
                               <td>{patient.blood_group}</td>
-                              <td><Link to ={{
-                                pathname: `/record/view/`+doctorId,
-                                state: { 
-                                  pid: patient._id, 
-                                }
-                              }} style={{ color: '#007bff' }} className="nav-link">View</Link></td>
+                              <td>{this.getData(patient._id)}</td>
                             </tr>
                           )}
                         </tbody>
