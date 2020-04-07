@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var User = require('./user.model.js');
 var encryption = require('./src/components/encryption.js');
+var store = require('./keystore.js');
 
 // User login api 
 router.post('/login', (req, res) => { 
@@ -50,21 +51,20 @@ router.post('/signup', (req, res, next) => {
     newUser.blood_group = req.body.blood_group
 
     // aes secret key
-    const userdata = encryption.generateSecretKey();
-    newUser.iv = userdata.iv.toString('binary');
+    const secretKey = encryption.generateSecretKey();
 
     // Encrypt the secret key using rsa public key
-    console.log("To string secretkey: ", userdata.secretKey.toString('binary'));
-    newUser.secretKey = encryption.encryptRSA(userdata.secretKey.toString('binary'), newUser.publicKey);
+    console.log("To string secretkey: ", secretKey.toString('binary'));
+    encKey = encryption.encryptRSA(secretKey.toString('binary'), newUser.publicKey);
 
-    console.log("---- TESTING AES ----");
-    decryptedKey = encryption.decryptRSA(newUser.secretKey, newUser.privateKey);
-    const keybuffer = Buffer.from(decryptedKey, 'binary');
-    const iv = Buffer.from(newUser.iv, 'binary')
+    // console.log("---- TESTING AES ----");
+    // decryptedKey = encryption.decryptRSA(newUser.secretKey, newUser.privateKey);
+    // const keybuffer = Buffer.from(decryptedKey, 'binary');
+    // const iv = Buffer.from(newUser.iv, 'binary')
 
-    const endata = encryption.encryptAES("Pankti Thakkar", keybuffer, iv);
-    console.log("Enc data: ",endata);
-    console.log("Decrypted: ",encryption.decryptAES(endata.encryptedData, keybuffer, Buffer.from(newUser.iv, 'binary')));
+    // const endata = encryption.encryptAES("Pankti Thakkar", keybuffer, iv);
+    // console.log("Enc data: ",endata);
+    // console.log("Decrypted: ",encryption.decryptAES(endata.encryptedData, keybuffer, Buffer.from(newUser.iv, 'binary')));
   }
   // Call setPassword function to hash password 
   newUser.setPassword(req.body.password);
@@ -72,6 +72,7 @@ router.post('/signup', (req, res, next) => {
   // Save newUser object to database
   User.create(newUser ,function(err, post) { 
     if (err) return next(err);
+    store.storeKey(post._id, encKey);
     res.json(post);
   });
 }); 

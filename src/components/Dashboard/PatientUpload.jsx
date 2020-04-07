@@ -18,6 +18,7 @@ const ipfs = ipfsClient({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' 
 
 let file = "";
 let count = "";
+let secretKey = "";
 let userId = "";
 
 class Upload extends React.Component {
@@ -56,6 +57,9 @@ class Upload extends React.Component {
       count = await this.state.contract.methods.getCount(this.state.userId).call()
       this.setState({count})
       console.log("Count: ", this.state.count);
+      secretKey = await this.state.contract.methods.getKey(this.state.userId).call()
+      this.setState({secretKey})
+      console.log("Secret key from blockchain: ", this.state.secretKey);
     } else {
       window.alert('Smart contract not deployed to detected network.')
     }
@@ -74,18 +78,15 @@ class Upload extends React.Component {
       count: "",
       secretKey: "",
       privateKey: "",
-      iv: "",
     }
   }
 
   componentDidMount() {
     axios.get('http://localhost:4000/api/user/'+userId)
       .then(res => {
-        this.setState({ username: res.data.first_name+' '+res.data.last_name, privateKey: res.data.privateKey, secretKey: res.data.secretKey, iv: res.data.iv })
+        this.setState({ username: res.data.first_name+' '+res.data.last_name, privateKey: res.data.privateKey })
         console.log("Username in Patient upload: " ,this.state.username);
-        console.log("Secret Key: " ,this.state.secretKey);
         console.log("Private Key: " ,this.state.privateKey);
-        console.log("IV: " ,this.state.iv);
     });
   }
 

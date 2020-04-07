@@ -31,8 +31,6 @@ class DoctorTableList extends React.Component {
   }
 
   componentDidMount() {
-    // set initial list as blank
-    let patientList = [];
     console.log("Doctor Table list props: ", this.props);
     doctorId = this.props.match.params.id;
     axios.get('http://localhost:4000/api/user/patients')

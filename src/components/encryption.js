@@ -117,9 +117,8 @@ function decryptRSA(text, privateKey) {
 
 function generateSecretKey() {
     const secretKey = crypto.randomBytes(32);
-    const iv = crypto.randomBytes(16);
-    console.log("SecretKey: ", secretKey, "\niv: ", iv);
-    return {secretKey: secretKey, iv: iv};
+    console.log("SecretKey: ", secretKey);
+    return secretKey;
 }  
 
 function encryptAES(text, secretKey, iv) {

@@ -11,7 +11,7 @@ import {
   Table,
   Row,
   Col,
-  Button
+  // Button
 } from "reactstrap";
 
 // core components
@@ -19,12 +19,13 @@ import PanelHeader from "../PanelHeader.jsx";
 import Sidebar from "../Sidebar/PatientSidebar";
 import DashboardNavbar from "../Navbars/DashboardNavbar";
 import DashboardFooter from "../Footers/DashboardFooter";
-import Modal from '../Modal';
+// import Modal from '../Modal';
 
 const encryption = require('../encryption.js');
 const ipfsClient = require('ipfs-http-client')
 const ipfs = ipfsClient({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' }) // leaving out the arguments will default to these values
 
+let secretKey = "";
 let medicalHistory = [];
 let userId = "";
 
@@ -33,10 +34,7 @@ class PatientTableList extends React.Component {
   async componentWillMount() {
     axios.get('http://localhost:4000/api/user/'+userId)
       .then(res => {
-        this.setState({ privateKey: res.data.privateKey, secretKey: res.data.secretKey, iv: res.data.iv })
-        // console.log("Secret Key: " ,this.state.secretKey);
-        // console.log("Private Key: " ,this.state.privateKey);
-        // console.log("IV: " ,this.state.iv);
+        this.setState({ privateKey: res.data.privateKey })
     });
     await this.loadWeb3()
     await this.loadBlockchainData()
@@ -68,6 +66,9 @@ class PatientTableList extends React.Component {
     if(networkData) {
       const contract = web3.eth.Contract(Store.abi, networkData.address)
       this.setState({ contract })
+      secretKey = await this.state.contract.methods.getKey(this.state.userId).call()
+      this.setState({secretKey})
+      console.log("Secret key from blockchain: ", this.state.secretKey);
       medicalHistory = await contract.methods.get(this.state.userId).call()
       this.setState({ medicalHistory })
       console.log("Medical History: ", medicalHistory);
@@ -99,48 +100,10 @@ class PatientTableList extends React.Component {
     console.log("byte array dec: ",byteArray);
     var arrayBufferView = new Uint8Array(byteArray);
     var blob = new Blob( [ arrayBufferView ], { type: 'image/jpg' } );
-
-    // const dcdata = encryption.decryptAES(record.data.toString('binary'), keybuffer, iv);
-    // console.log("Decrypted string: ",typeof dcdata);
-    // record.file = Buffer.from(dcdata, 'binary');
-    // var blob = new Blob([record.file], {'type': 'image/jpg'});
     record.url = URL.createObjectURL(blob);
     return record;
-    // const enbuffer = Buffer.from(endata.encryptedData ,'binary');
-    // console.log("Encrypted buffer: ",enbuffer);
-    // decrypt secret key
-    // use secret key to decrypt record.data
-    // convert string to buffer
-    // convert buffer to file
-    // store in record.file
-    // return record
   }
-  
-  // delay(hash) {
-  //   return new Promise((resolve, reject) => {
-  //             setTimeout(() => {
-  //                 let error = false;
-  //                 if(!error)
-  //                     resolve(hash)
-  //                 else
-  //                     reject()
-  //             }, 300)     
-  //         });
-  // }
-  // async delayedLog(item) {
-  //   // notice that we can await a function
-  //   // that returns a promise
-  //   const node = await IPFS.create()
-  //   const data = await node.cat(item);
-  //   this.state.ipfsData.push(data);
-  // }
-  // async processArray() {
-  //   for (const item of this.state.medicalHistory) {
-  //     await this.delayedLog(item.fileHash);
-  //   }
-  //   console.log('Done!');
-  //   console.log("ipfs data: ",this.state.ipfsData)
-  // }
+
   constructor(props) {
     super(props)
     console.log("View props: ", this.props);
@@ -153,29 +116,9 @@ class PatientTableList extends React.Component {
       userId: "",
       privateKey: "",
       secretKey: "",
-      iv: "",
       medicalHistory: [],
     }
   }
-
-  // componentDidMount() {
-  //   axios.get('http://localhost:4000/api/user/'+userId)
-  //     .then(res => {
-  //       this.setState({ privateKey: res.data.privateKey, secretKey: res.data.secretKey, iv: res.data.iv })
-  //       console.log("Secret Key: " ,this.state.secretKey);
-  //       console.log("Private Key: " ,this.state.privateKey);
-  //       console.log("IV: " ,this.state.iv);
-  //   });
-  //   console.log("In component did mount");
-  //   this.getDecryptedData();
-  // }
-  
-  // async getDecryptedData () {
-  //   console.log("In get dec data");
-  //   this.setState({medicalHistory: await Promise.all(medicalHistory.map(record => this.getIPFSData(record)))})
-  //   this.setState({medicalHistory: medicalHistory.map(record => this.getFile(record))})
-  //   console.log("Ipfs data state list responses : ",this.state.medicalHistory);
-  // }
 
   handleToggleModal() {
     this.setState({ showModal: !this.state.showModal });
@@ -191,7 +134,7 @@ class PatientTableList extends React.Component {
   }
 
   render() {
-    const { showModal } = this.state;
+    // const { showModal } = this.state;
     return (
       <>
         <div className="wrapper">

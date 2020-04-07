@@ -12,7 +12,7 @@ import {
   Table,
   Row,
   Col,
-  Button
+  // Button
 } from "reactstrap";
 
 // core components
@@ -20,7 +20,7 @@ import PanelHeader from "../PanelHeader.jsx";
 import Sidebar from "../Sidebar/RecordSidebar";
 import DashboardNavbar from "../Navbars/DashboardNavbar";
 import DashboardFooter from "../Footers/DashboardFooter";
-import Modal from '../Modal'; 
+// import Modal from '../Modal'; 
 
 const encryption = require('../encryption.js');
 const ipfsClient = require('ipfs-http-client')
@@ -37,9 +37,6 @@ class RecordList extends React.Component {
     axios.get('http://localhost:4000/api/user/'+doctorId)
       .then(res => {
         this.setState({ privateKey: res.data.privateKey })
-        // console.log("Secret Key: " ,this.state.secretKey);
-        // console.log("Private Key: " ,typeof this.state.privateKey);
-        // console.log("IV: " ,this.state.iv);
     });
     await this.loadWeb3()
     await this.loadBlockchainData()
@@ -104,21 +101,8 @@ class RecordList extends React.Component {
     console.log("byte array dec: ",byteArray);
     var arrayBufferView = new Uint8Array(byteArray);
     var blob = new Blob( [ arrayBufferView ], { type: 'image/jpg' } );
-
-    // const dcdata = encryption.decryptAES(record.data.toString('binary'), keybuffer, iv);
-    // console.log("Decrypted string: ",typeof dcdata);
-    // record.file = Buffer.from(dcdata, 'binary');
-    // var blob = new Blob([record.file], {'type': 'image/jpg'});
     record.url = URL.createObjectURL(blob);
     return record;
-    // const enbuffer = Buffer.from(endata.encryptedData ,'binary');
-    // console.log("Encrypted buffer: ",enbuffer);
-    // decrypt secret key
-    // use secret key to decrypt record.data
-    // convert string to buffer
-    // convert buffer to file
-    // store in record.file
-    // return record
   }
 
   constructor(props) {

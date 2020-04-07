@@ -17,8 +17,6 @@ var UserSchema = new mongoose.Schema({
   acl: [],
   publicKey: String,
   privateKey: String,
-  secretKey: String,
-  iv: String,
   updated_date: { type: Date, default: Date.now },
 });
 

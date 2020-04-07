@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
-
+import Web3 from 'web3';
+import Store from '../../abis/Store.json'
 // reactstrap components
 import {
   Card,
@@ -22,14 +23,57 @@ const encryption = require('../encryption.js');
 
 let patientId = "";
 let patient = {};
+let secretKey = "";
 
 class PatientView extends React.Component {
+
+  async componentWillMount() {
+    await this.loadWeb3()
+    await this.loadBlockchainData()
+  }
+
+  async loadWeb3() {
+    if (window.ethereum) {
+      window.web3 = new Web3(window.ethereum)
+      await window.ethereum.enable()
+    }
+    else if (window.web3) {
+      window.web3 = new Web3(window.web3.currentProvider)
+    }
+    else {
+      window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
+    }
+  }
+
+  async loadBlockchainData() {
+    const web3 = window.web3
+    // Load account
+    const accounts = await web3.eth.getAccounts()
+    console.log("Patient id: ", patientId);
+    this.setState({ account: accounts[0] })
+    const networkId = await web3.eth.net.getId()
+    const networkData = Store.networks[networkId]
+    if(networkData) {
+      const contract = web3.eth.Contract(Store.abi, networkData.address)
+      this.setState({ contract })
+      secretKey = await this.state.contract.methods.getKey(patientId).call()
+      this.setState({secretKey})
+      console.log("Secret key from blockchain: ", this.state.secretKey);
+    } else {
+      window.alert('Smart contract not deployed to detected network.')
+    }
+  }
 
   constructor(props) {
     super(props)
     this.state = {
       doctorList: [],
-      patient: {}
+      patient: {},
+      contract: null,
+      web3: null,
+      buffer: null,
+      account: null,
+      secretKey: "",
     }
     console.log("Patient View props: ", this.props);
     patientId = this.props.match.params.id;
@@ -85,7 +129,7 @@ class PatientView extends React.Component {
         // make changes
         patient.acl.push(doctor._id);
         console.log("Patient after adding: ",patient);
-        const rencKey = this.reEncrypt(patient.secretKey, doctor.publicKey);
+        const rencKey = this.reEncrypt(this.state.secretKey, doctor.publicKey);
         doctor.acl.push({pid: patient._id, encKey: rencKey});
 
         // make axios update request
@@ -110,8 +154,6 @@ class PatientView extends React.Component {
   }
 
   getColor = id => {
-    console.log("Patient state in get color: " ,this.state.patient);
-    console.log("Patient in get color: " , patient);
     if(JSON.stringify(patient) === '{}')
       return '#666';
     else {

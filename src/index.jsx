@@ -27,7 +27,6 @@ import DoctorUserPage from "./components/Dashboard/DoctorUserpage.jsx"
 import PatientList from "./components/Dashboard/DoctorTableList.jsx";
 import RecordList from "./components/Dashboard/RecordTableList.jsx";
 import DoctorUpload from "./components/Dashboard/DoctorUpload.jsx";
-import PermissionGrant from "./components/Dashboard/PermissionGrant.jsx";
 
 ReactDOM.render(
   <Router history={createBrowserHistory()}>
@@ -45,7 +44,6 @@ ReactDOM.render(
         <Route path="/doctor/view/:id" render={props => <PatientList {...props} />} />
         <Route path="/record/view/:id" render={props => <RecordList {...props} />} />
         <Route path="/record/upload/:id" render={props => <DoctorUpload {...props} />} />
-        <Route path="/permission/grant/:id" render={props => <PermissionGrant {...props} />} />
         <Route path="*" component={NotFound} />
       </Switch>*
     </Switch>

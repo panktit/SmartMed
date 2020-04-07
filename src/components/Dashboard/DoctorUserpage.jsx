@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import Web3 from 'web3';
 
 // reactstrap components
 import {
@@ -23,12 +24,39 @@ import DashboardFooter from "../Footers/DashboardFooter";
 let doctorID = "";
 
 class User extends React.Component {
+  async componentWillMount() {
+    await this.loadWeb3()
+    await this.loadBlockchainData()
+  }
 
+  async loadWeb3() {
+    if (window.ethereum) {
+      window.web3 = new Web3(window.ethereum)
+      await window.ethereum.enable()
+    }
+    else if (window.web3) {
+      window.web3 = new Web3(window.web3.currentProvider)
+    }
+    else {
+      window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
+    }
+  }
+
+  async loadBlockchainData() {
+    const web3 = window.web3
+    // Load userId
+    
+    // Load account
+    const accounts = await web3.eth.getAccounts()
+    console.log("User id: ", this.state.user._id);
+    this.setState({ account: accounts[0] })
+  }
   constructor(props) {
     super(props);
     this.state = {
       user: {},
       patientCount: 0,
+      account: null,
     }
   }
 
@@ -76,7 +104,7 @@ class User extends React.Component {
                             <FormGroup>
                               <label>Account</label>
                               <Input
-                                defaultValue="0x6Ec32540D17Ba65F5F10eB8c7A132A8D74109C98"
+                                defaultValue={this.state.account}
                                 disabled
                                 placeholder="Account"
                                 type="text"

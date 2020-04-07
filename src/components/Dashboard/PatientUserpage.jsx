@@ -111,7 +111,7 @@ class User extends React.Component {
                             <FormGroup>
                               <label>Account</label>
                               <Input
-                                defaultValue="0x31F78757A4bAe84808Aa91a1cebf43e50ca0BFd6"
+                                defaultValue={this.state.account}
                                 disabled
                                 placeholder="Account"
                                 type="text"
