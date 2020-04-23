@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import Web3 from 'web3';
-import Store from '../../abis/Store.json'
+import Store from '../../../abis/Store.json'
 // reactstrap components
 import {
   Card,
@@ -15,11 +15,11 @@ import {
 } from "reactstrap";
 
 // core components
-import PanelHeader from "../PanelHeader.jsx";
-import Sidebar from "../Sidebar/PatientSidebar";
-import DashboardNavbar from "../Navbars/DashboardNavbar";
-import DashboardFooter from "../Footers/DashboardFooter";
-const encryption = require('../encryption.js');
+import PanelHeader from "../../PanelHeader.jsx";
+import Sidebar from "../../Sidebar/PatientSidebar";
+import DashboardNavbar from "../../Navbars/DashboardNavbar";
+import DashboardFooter from "../../Footers/DashboardFooter";
+const encryption = require('../../encryption.js');
 
 let patientId = "";
 let patient = {};

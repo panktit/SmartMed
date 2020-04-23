@@ -2,16 +2,16 @@ import React from 'react';
 
 // reactstrap components
 import { Card, CardHeader, CardBody, Row, Col } from "reactstrap";
-import PanelHeader from "../PanelHeader.jsx";
-import Sidebar from "../Sidebar/RecordSidebar";
-import DashboardNavbar from "../Navbars/DashboardNavbar";
-import DashboardFooter from "../Footers/DashboardFooter";
+import PanelHeader from "../../PanelHeader.jsx";
+import Sidebar from "../../Sidebar/RecordSidebar";
+import DashboardNavbar from "../../Navbars/DashboardNavbar";
+import DashboardFooter from "../../Footers/DashboardFooter";
 import axios from 'axios';
 import Web3 from 'web3';
-import Store from '../../abis/Store.json'
+import Store from '../../../abis/Store.json'
 import { Button } from 'reactstrap';
 var dateFormat = require('dateformat');
-var encryption = require('../encryption.js');
+var encryption = require('../../encryption.js');
 
 const ipfsClient = require('ipfs-http-client')
 const ipfs = ipfsClient({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' }) // leaving out the arguments will default to these values

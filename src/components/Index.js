@@ -30,19 +30,7 @@ function Index(props) {
       <div className="wrapper">
         <IndexHeader />
         <div className="main">
-          {/* <BasicElements />
-          <Navbars />
-          <Tabs />
-          <Pagination />
-          <Notifications /> */}
           <Typography />
-          {/* <Javascript />
-          <Carousel />
-          <NucleoIcons />
-          <CompleteExamples />
-          <SignUp />
-          <Examples />
-          <Download /> */}
         </div>
         <DarkFooter />
       </div>

@@ -14,10 +14,10 @@ import {
 } from "reactstrap";
 
 // core components
-import PanelHeader from "../PanelHeader.jsx";
-import Sidebar from "../Sidebar/DoctorSidebar";
-import DashboardNavbar from "../Navbars/DashboardNavbar";
-import DashboardFooter from "../Footers/DashboardFooter";
+import PanelHeader from "../../PanelHeader.jsx";
+import Sidebar from "../../Sidebar/DoctorSidebar";
+import DashboardNavbar from "../../Navbars/DashboardNavbar";
+import DashboardFooter from "../../Footers/DashboardFooter";
 
 let doctorId = "";
 let doctor = {};

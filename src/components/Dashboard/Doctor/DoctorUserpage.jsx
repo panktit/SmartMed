@@ -1,7 +1,6 @@
 import React from "react";
 import axios from "axios";
 import Web3 from 'web3';
-import Store from '../../abis/Store.json'
 
 // reactstrap components
 import {
@@ -17,16 +16,14 @@ import {
 } from "reactstrap";
 
 // core components
-import PanelHeader from "../PanelHeader.jsx";
-import Sidebar from "../Sidebar/PatientSidebar";
-import DashboardNavbar from "../Navbars/DashboardNavbar";
-import DashboardFooter from "../Footers/DashboardFooter";
+import PanelHeader from "../../PanelHeader.jsx";
+import Sidebar from "../../Sidebar/DoctorSidebar";
+import DashboardNavbar from "../../Navbars/DashboardNavbar";
+import DashboardFooter from "../../Footers/DashboardFooter";
 
-let patientID = "";
-let docsCount = "";
+let doctorID = "";
 
 class User extends React.Component {
-
   async componentWillMount() {
     await this.loadWeb3()
     await this.loadBlockchainData()
@@ -53,49 +50,45 @@ class User extends React.Component {
     const accounts = await web3.eth.getAccounts()
     console.log("User id: ", this.state.user._id);
     this.setState({ account: accounts[0] })
-    const networkId = await web3.eth.net.getId()
-    const networkData = Store.networks[networkId]
-    if(networkData) {
-      const contract = web3.eth.Contract(Store.abi, networkData.address)
-      this.setState({ contract })
-      docsCount = await this.state.contract.methods.getCount(this.state.user._id).call()
-      this.setState({docsCount : parseInt(docsCount._hex)})
-      console.log("Count: ", this.state.docsCount);
-    } else {
-      window.alert('Smart contract not deployed to detected network.')
+  }
+  constructor(props) {
+    super(props);
+    this.state = {
+      user: {},
+      patientCount: 0,
+      account: null,
     }
   }
 
-    constructor(props) {
-      super(props);
-      this.state = {
-        user: {},
-        doctorCount: 0,
-        docsCount: "",
-        contract: null,
-        web3: null,
-        account: null,
-      }
-    }
+  componentDidMount() {
+    console.log("Props in Doctor User Page: ", this.props);
+    doctorID = this.props.match.params.id;
+    axios.get('http://localhost:4000/api/user/'+doctorID)
+      .then(res => {
+        this.setState({ user: res.data });
+        console.log("User state in Doctor user page: " ,this.state.user);
+    });
 
-    componentDidMount() {
-      console.log("Props in Patient User Page: ", this.props);
-      patientID = this.props.match.params.id;
-      axios.get('http://localhost:4000/api/user/'+patientID)
-        .then(res => {
-          this.setState({ user: res.data });
-          this.setState({doctorCount: res.data.acl.length});
-          console.log("User state in Patient user page: " ,this.state.user);
-      });
-    }
-      
+    let patientCount = 0;
+    axios.get('http://localhost:4000/api/user/patients')
+      .then(res => {
+        res.data.forEach(patient => {
+          console.log("Patient: ",patient.list);
+          if(patient.acl.includes(doctorID)) {
+            patientCount++;
+          }
+        })
+        this.setState({ patientCount });
+        console.log("Patient Count: ", this.state.patientCount);
+    });
+  }
   render() {
     return (
       <>
-      <div className="wrapper">
-        <Sidebar {...this.props} />
-        <div className="main-panel" ref={this.mainPanel}>
-          <DashboardNavbar {...this.props} />
+        <div className="wrapper">
+          <Sidebar {...this.props} />
+          <div className="main-panel" ref={this.mainPanel}>
+            <DashboardNavbar {...this.props} />
             <PanelHeader size="sm" />
             <div className="content">
               <Row>
@@ -123,7 +116,7 @@ class User extends React.Component {
                               <label htmlFor="exampleInputEmail1">
                                 Email address
                               </label>
-                              <Input defaultValue={this.state.user.email} type="email" disabled />
+                              <Input defaultValue={this.state.user.email} type="email" disabled/>
                             </FormGroup>
                           </Col>
                         </Row>
@@ -151,26 +144,32 @@ class User extends React.Component {
                           </Col>
                         </Row>
                         <Row>
-                          <Col className="pr-1" md="6">
+                          <Col className="pr-1" md="4">
                             <FormGroup>
-                              <label>Age</label>
-                              <Input 
-                                defaultValue={this.state.user.age} 
-                                type="number" 
-                                min="0"
-                                max="120"
+                              <label>Qualification</label>
+                              <Input
+                                defaultValue={this.state.user.qualification}
+                                placeholder="e.g. MBBS"
+                                type="text"
                                 disabled
                               />
                             </FormGroup>
                           </Col>
-                          <Col className="pl-1" md="6">
+                          <Col className="px-1" md="4">
                             <FormGroup>
-                              <label>Blood Group</label>
+                              <label>Specialization</label>
                               <Input
-                                defaultValue={this.state.user.blood_group}
+                                defaultValue={this.state.user.specialization}
+                                placeholder="e.g. Cardiology"
                                 type="text"
                                 disabled
                               />
+                            </FormGroup>
+                          </Col>
+                          <Col className="pl-1" md="4">
+                            <FormGroup>
+                              <label>License Number</label>
+                              <Input defaultValue={this.state.user.license} placeholder="e.g. 123456" type="text" disabled/>
                             </FormGroup>
                           </Col>
                         </Row>
@@ -181,21 +180,17 @@ class User extends React.Component {
                 <Col md="4">
                   <Card className="card-user">
                     <CardBody>
-                      <Table responsive>
+                    <Table responsive>
                         <thead className="text-primary">
                           <tr>
                             <th>Statistics</th>
                           </tr>
                         </thead>
                         <tbody>
-                          <tr>
-                            <td>Number of Permitted Doctors</td>
-                            <td style={{color: "#007bff"}}>{this.state.doctorCount}</td>
-                          </tr>
-                          <tr>
-                            <td>Number of Documents</td>
-                            <td style={{color: "#007bff"}}>{this.state.docsCount}</td>
-                          </tr>
+                            <tr>
+                              <td>Number of Accessible Patients</td>
+                              <td style={{color: "#007bff"}}>{this.state.patientCount}</td>
+                            </tr>
                         </tbody>
                       </Table>
                     </CardBody>
@@ -203,9 +198,9 @@ class User extends React.Component {
                 </Col>
               </Row>
             </div>
-          <DashboardFooter fluid />
+            <DashboardFooter fluid />
+          </div>
         </div>
-      </div>
       </>
     );
   }
