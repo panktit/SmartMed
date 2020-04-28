@@ -32,7 +32,6 @@ const initialState = {
   passwordLengthError: "",
   passwordMatchError: "",
   userTypeError: "",
-
 };
 
 class SignupPage extends React.Component {
@@ -58,68 +57,46 @@ class SignupPage extends React.Component {
     let passwordMatchError = "";
     let userTypeError= "";
     if (!this.state.first_name) {
-        fnameError = "First Name cannot be blank";
+      fnameError = "First Name cannot be blank";
     }
-
     if (!this.state.last_name) {
       lnameError = "Last Name cannot be blank";
     }
-
     if (!this.state.email.includes("@") && !this.state.email.includes(".")) {
       emailError = "Invalid Email";
     }
-
     if(this.state.password.length < 8) {
-        passwordLengthError = "Password should contain atleast 8 characters"
+      passwordLengthError = "Password should contain atleast 8 characters"
     }
-
     if(!(this.state.password === this.state.cnfpassword)) {
-        passwordMatchError = "Passwords do not match"
+      passwordMatchError = "Passwords do not match"
     }
-
     if(!this.state.userType) {
       userTypeError = "Please select a user type"
     }
-
     if (fnameError || lnameError || emailError || passwordLengthError || passwordMatchError || userTypeError) {
       this.setState({ fnameError, lnameError, emailError, passwordLengthError, passwordMatchError, userTypeError });
       return false;
     }
-
     return true;
   };
-
  
   handleSubmit = event => {
     event.preventDefault();
     const isValid = this.validate();
     if (isValid) {
       this.setState(initialState);
-      // save the entry in database
-      if(this.state.userType === "doctor") {
-        axios.post('http://localhost:4000/api/user/signup', { first_name: this.state.first_name, 
-          last_name: this.state.last_name, 
-          email: this.state.email, 
-          password: this.state.password,
-          userType: this.state.userType,
-          qualification: this.state.qualification, 
-          specialization: this.state.specialization, 
-          license: this.state.license })
-        .then((result) => {
+      axios.post('http://localhost:4000/api/user/signup', this.state)
+      .then((res) => {
+        console.log("Post response: ", res)
+        if(res.status === 201) {
+          this.setState(res.data)
+          console.log("State after response: ", this.state)
+        }
+        else {
           this.props.history.push("/")
-        });
-      } else if(this.state.userType === "patient") {
-        axios.post('http://localhost:4000/api/user/signup', { first_name: this.state.first_name, 
-          last_name: this.state.last_name, 
-          email: this.state.email, 
-          password: this.state.password,
-          userType: this.state.userType,
-          age: this.state.age, 
-          blood_group: this.state.blood_group })
-        .then((result) => {
-          this.props.history.push("/")
-        });
-      }
+        }
+      });
     }
   };
 

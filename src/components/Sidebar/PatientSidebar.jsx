@@ -69,7 +69,18 @@ class Sidebar extends React.Component {
                     <p>My Profile</p>
                   </NavLink>
                 </li>
-
+                <li
+                  className={this.activeRoute("/patient/upload")}
+                >
+                  <NavLink {...this.props}
+                    to={'/patient/upload/'+patientId}
+                    className="nav-link"
+                    activeClassName="active"
+                  >
+                    <i className="now-ui-icons arrows-1_cloud-upload-94" />
+                    <p>Upload New Record</p>
+                  </NavLink>
+                </li>
                 <li
                   className={this.activeRoute("/patient/view")}
                 >
@@ -82,20 +93,6 @@ class Sidebar extends React.Component {
                     <p>View Records</p>
                   </NavLink>
                 </li>
-
-                <li
-                  className={this.activeRoute("/patient/upload")}
-                >
-                  <NavLink {...this.props}
-                    to={'/patient/upload/'+patientId}
-                    className="nav-link"
-                    activeClassName="active"
-                  >
-                    <i className="now-ui-icons arrows-1_cloud-upload-94" />
-                    <p>Upload Records</p>
-                  </NavLink>
-                </li>
-
                 <li
                   className={this.activeRoute("/patient/grant")}
                 >

@@ -1,19 +1,41 @@
 var crypto = require('crypto'); 
 const QuickEncrypt = require('quick-encrypt')
-
-
 const CryptoJS = require("crypto-js");
+
+function generateRSAKeys() {
+    let keys = QuickEncrypt.generate(1024) // Use either 2048 bits or 1024 bits.
+    console.log("Keys generated: " ,keys) // Generated Public Key and Private Key pair
+    return keys
+}
+
+function encryptRSA(text, publicKey) {
+    let encryptedText = QuickEncrypt.encrypt(text, publicKey)
+    return encryptedText
+}
+
+
+function decryptRSA(text, privateKey) {
+    let decryptedText = QuickEncrypt.decrypt(text, privateKey)
+    return decryptedText
+}
+
+function generateSecretKey() {
+    const secretKey = crypto.randomBytes(32);
+    console.log("SecretKey: ", secretKey);
+    return secretKey;
+}  
+
 function callEncrypt(argument, key) {
     console.log("In call encrypt");
-  const wordArray = CryptoJS.lib.WordArray.create(argument);
-  console.log("Word array: ", wordArray);
-  console.log("Word array type: ", typeof wordArray);
-  const str = CryptoJS.enc.Hex.stringify(wordArray);
-  console.log("Type of str: ", typeof str);
-  const ct = CryptoJS.AES.encrypt(str, key);
-  console.log("ct: ",ct);
-  const ctstr = ct.toString();
-  return ctstr;
+    const wordArray = CryptoJS.lib.WordArray.create(argument);
+    console.log("Word array: ", wordArray);
+    console.log("Word array type: ", typeof wordArray);
+    const str = CryptoJS.enc.Hex.stringify(wordArray);
+    console.log("Type of str: ", typeof str);
+    const ct = CryptoJS.AES.encrypt(str, key);
+    console.log("ct: ",ct);
+    const ctstr = ct.toString();
+    return ctstr;
 }
 
 function callDecrypt(enctext, key) {
@@ -68,82 +90,8 @@ function wordArrayToByteArray(wordArray, length) {
 	return [].concat.apply([], result);
 }
 
-function generateRSAKeys() {
-    let keys = QuickEncrypt.generate(1024) // Use either 2048 bits or 1024 bits.
-    console.log("Keys generated: " ,keys) // Generated Public Key and Private Key pair
-    return keys
-}
-
-function encryptRSA(text, publicKey) {
-    let encryptedText = QuickEncrypt.encrypt(text, publicKey)
-    return encryptedText
-}
-
-
-function decryptRSA(text, privateKey) {
-    let decryptedText = QuickEncrypt.decrypt(text, privateKey)
-    return decryptedText
-}
-
-// const generateKeys = () => {
-//     console.log("In generate function");
-//     crypto.generateKeyPair('rsa', {
-//         modulusLength: 4096,
-//         publicKeyEncoding: {
-//           type: 'spki',
-//           format: 'pem'
-//         },
-//         privateKeyEncoding: {
-//           type: 'pkcs8',
-//           format: 'pem',
-//           cipher: 'aes-256-cbc', 
-//           passphrase: ''
-//         }
-//     }, (err, publicKey, privateKey) => {
-//         pbKey = publicKey,
-//         prKey = privateKey
-//     })
-//     return new Promise((resolve, reject) => {
-//         setTimeout(() => {
-//             let error = false;
-//             if(!error)
-//                 resolve({ publicKey: pbKey, privateKey: prKey })
-//             else
-//                 reject()
-//         }, 2000)     
-//     })
-// }
-
-
-function generateSecretKey() {
-    const secretKey = crypto.randomBytes(32);
-    console.log("SecretKey: ", secretKey);
-    return secretKey;
-}  
-
-function encryptAES(text, secretKey, iv) {
-   let cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(secretKey), iv);
-   let encrypted = cipher.update(text);
-   encrypted = Buffer.concat([encrypted, cipher.final()]);
-   return { iv: iv.toString('hex'), encryptedData: encrypted.toString('hex') };
-}
-
-function decryptAES(text, secretKey ,iv) {
-   console.log("type of text: ",typeof text);
-   console.log("type of secretKey: ",typeof secretKey);
-   console.log("type of iv: ",typeof iv);
-   let ivBuffer = Buffer.from(iv, 'hex');
-   let encryptedText = Buffer.from(text, 'hex');
-   let decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(secretKey), ivBuffer);
-   let decrypted = decipher.update(encryptedText);
-   decrypted = Buffer.concat([decrypted, decipher.final()]);
-   return decrypted.toString();
-}
-
 module.exports.generateRSAKeys = generateRSAKeys;
 module.exports.generateSecretKey = generateSecretKey;
-module.exports.encryptAES = encryptAES;
-module.exports.decryptAES = decryptAES;
 module.exports.encryptRSA = encryptRSA;
 module.exports.decryptRSA = decryptRSA;
 module.exports.callEncrypt = callEncrypt;

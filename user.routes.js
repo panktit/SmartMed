@@ -42,6 +42,14 @@ router.post('/signup', (req, res, next) => {
   newUser.email = req.body.email,
   newUser.userType = req.body.userType
   
+  req.body.fnameError = "";
+  req.body.lnameError = "";
+  req.body.emailError = "";
+  req.body.ageError = "";
+  req.body.passwordLengthError = "";
+  req.body.passwordMatchError = "";
+  req.body.userTypeError = "";
+  
   if(newUser.userType === "doctor") {
     newUser.qualification = req.body.qualification,
     newUser.specialization = req.body.specialization,
@@ -56,29 +64,49 @@ router.post('/signup', (req, res, next) => {
     // Encrypt the secret key using rsa public key
     console.log("To string secretkey: ", secretKey.toString('binary'));
     encKey = encryption.encryptRSA(secretKey.toString('binary'), newUser.publicKey);
-
-    // console.log("---- TESTING AES ----");
-    // decryptedKey = encryption.decryptRSA(newUser.secretKey, newUser.privateKey);
-    // const keybuffer = Buffer.from(decryptedKey, 'binary');
-    // const iv = Buffer.from(newUser.iv, 'binary')
-
-    // const endata = encryption.encryptAES("Pankti Thakkar", keybuffer, iv);
-    // console.log("Enc data: ",endata);
-    // console.log("Decrypted: ",encryption.decryptAES(endata.encryptedData, keybuffer, Buffer.from(newUser.iv, 'binary')));
   }
   // Call setPassword function to hash password 
   newUser.setPassword(req.body.password);
   
+  validate = (user) => {
+    if (!user.first_name) {
+      user.fnameError = "First Name cannot be blank";
+    }
+    if (!user.last_name) {
+      user.lnameError = "Last Name cannot be blank";
+    }
+    if (!user.userType) {
+      user.userTypeError = "Please select a user type";
+    }
+    if (!user.email.includes("@") && !user.email.includes(".")) {
+      user.emailError = "Invalid Email";
+    }
+    if(user.password.length < 8) {
+      user.passwordLengthError = "Password should contain atleast 8 characters"
+    }
+    if(!(user.password === user.cnfpassword)) {
+      user.passwordMatchError = "Passwords do not match"
+    }
+    return user;
+  };
+
   // Save newUser object to database
-  User.create(newUser ,function(err, post) { 
-    if (err) return next(err);
-    store.storeKey(post._id, encKey);
-    res.json(post);
-  });
+  const user = validate(req.body);
+  if(!(user.fnameError || user.lnameError || user.emailError || user.passwordLengthError || user.passwordMatchError || user.userTypeError)) {
+    User.create(newUser ,function(err, post) { 
+      if (err) return next(err);
+      if(post.userType == "patient") {
+        store.storeKey(post._id, encKey);
+      }
+      res.json(post);
+    });
+  } else {
+    res.status(201).json(user);
+  }
 }); 
 
 
-/* GET ALL USERS */
+// GET ALL USERS
 router.get('/', function(req, res, next) {
   User.find(function (err, users) {
     if (err) return next(err);
@@ -87,7 +115,7 @@ router.get('/', function(req, res, next) {
 });
 
 
-/* GET ALL PATIENTS */
+// GET ALL PATIENTS
 router.get('/patients', function(req, res, next) {
   User.find({"userType": "patient"},function (err, users) {
     if (err) return next(err);
@@ -95,7 +123,7 @@ router.get('/patients', function(req, res, next) {
   });
 });
 
-/* GET ALL DOCTORS */
+// GET ALL DOCTORS
 router.get('/doctors', function(req, res, next) {
   User.find({"userType": "doctor"},function (err, users) {
     if (err) return next(err);
@@ -103,7 +131,7 @@ router.get('/doctors', function(req, res, next) {
   });
 });
 
-/* GET SINGLE USER BY ID */
+// GET SINGLE USER BY ID 
 router.get('/:id', function(req, res, next) {
   User.findById(req.params.id, function (err, post) {
     if (err) return next(err);
@@ -111,33 +139,9 @@ router.get('/:id', function(req, res, next) {
   });
 });
 
-/* GET SINGLE USER BY EMAIL */
-// router.get('/:id', function(req, res, next) {
-//   User.find({"email": req.params.id}, function (err, user) {
-//     if (err) return next(err);
-//     res.json(user);
-//   });
-// });
-
-/* SAVE USER */
-router.post('/', function(req, res, next) {
-  User.create(req.body, function (err, post) {
-    if (err) return next(err);
-    res.json(post);
-  });
-});
-
-/* UPDATE USER */
+// UPDATE USER
 router.put('/:id', function(req, res, next) {
   User.findByIdAndUpdate(req.params.id, req.body, function (err, post) {
-    if (err) return next(err);
-    res.json(post);
-  });
-});
-
-/* DELETE USER */
-router.delete('/:id', function(req, res, next) {
-  User.findByIdAndRemove(req.params.id, req.body, function (err, post) {
     if (err) return next(err);
     res.json(post);
   });
