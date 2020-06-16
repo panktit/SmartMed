@@ -65,7 +65,6 @@ class Upload extends React.Component {
 
   constructor(props) {
     super(props)
-    console.log("Props in doctor file upload: ",this.props);
     encKey = this.props.location.state.encKey;
     patientId = this.props.location.state.pid;
     doctorId = this.props.match.params.id;
@@ -95,7 +94,6 @@ class Upload extends React.Component {
   captureFile = (event) => {
     event.preventDefault()
     file = event.target.files[0]
-    console.log("File Date: ", file.lastModifiedDate);
     const reader = new window.FileReader()
     reader.readAsArrayBuffer(file)
     reader.onloadend = () => {
@@ -118,7 +116,7 @@ class Upload extends React.Component {
     // console.log("Encrypted string: ",endata.encryptedData);
     // const enbuffer = Buffer.from(endata.encryptedData ,'binary');
     // console.log("Encrypted buffer: ",enbuffer);
-    
+    console.log("Encryption successful!");
     // add encrypted buffer to ipfs
     console.log("Submitting file to ipfs...")
     ipfs.add(testBuffer, (error, result) => {
@@ -154,7 +152,7 @@ class Upload extends React.Component {
                           <main role="main" className="col-lg-12 d-flex text-center">
                             <div className="content mr-auto ml-auto">
                               <form onSubmit={this.onSubmit} >
-                                <input  type='file' onChange={this.captureFile} />
+                                <input  type='file' onChange={this.captureFile} required />
                                 <Button type='submit' color='info' size='sm'> Submit </Button>
                               </form>
                               <p>&nbsp;</p>

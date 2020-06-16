@@ -15,11 +15,9 @@ import {
 } from "reactstrap";
 
 function LoginNavbar(props) {
-  console.log("Login Navbar props: ",props);
   const [user] = React.useState(props.location.state);
   const [navbarColor, setNavbarColor] = React.useState("navbar-transparent");
   const [collapseOpen, setCollapseOpen] = React.useState(false);
-  console.log("User in Login Navbar: ", user);
   React.useEffect(() => {
     const updateNavbarColor = () => {
       if (

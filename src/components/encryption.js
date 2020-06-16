@@ -26,29 +26,19 @@ function generateSecretKey() {
 }  
 
 function callEncrypt(argument, key) {
-    console.log("In call encrypt");
     const wordArray = CryptoJS.lib.WordArray.create(argument);
-    console.log("Word array: ", wordArray);
-    console.log("Word array type: ", typeof wordArray);
     const str = CryptoJS.enc.Hex.stringify(wordArray);
-    console.log("Type of str: ", typeof str);
     const ct = CryptoJS.AES.encrypt(str, key);
-    console.log("ct: ",ct);
     const ctstr = ct.toString();
     return ctstr;
 }
 
 function callDecrypt(enctext, key) {
     var str = uintToString(enctext)
-    const decrypted = CryptoJS.AES.decrypt(str, key);
-    console.log("Decrypted type: ",typeof decrypted);
+    const decrypted = CryptoJS.AES.decrypt(str, key)
     str = decrypted.toString(CryptoJS.enc.Utf8);
     const wordArray = CryptoJS.enc.Hex.parse(str);
-    console.log("Word array: ",wordArray);
-    console.log("Word array type: ", typeof wordArray);
     const BaText = wordArrayToByteArray(wordArray, wordArray.length);
-    console.log("BaText: ",BaText);
-    console.log("BaText type: ", typeof BaText);
     return(BaText);
 }
 

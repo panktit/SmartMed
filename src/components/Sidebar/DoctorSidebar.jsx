@@ -19,7 +19,6 @@ class Sidebar extends React.Component {
     return this.props.location.pathname.indexOf(routeName) > -1 ? "active" : "";
   }
   componentDidMount() {
-    console.log("Sidebar props: ", this.props);
     doctorId = this.props.match.params.id;
     if (navigator.platform.indexOf("Win") > -1) {
       ps = new PerfectScrollbar(this.refs.sidebar, {

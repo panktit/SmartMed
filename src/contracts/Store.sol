@@ -30,5 +30,4 @@ contract Store {
   function getCount(string memory _id) public view  returns (uint) {
     return medicalHistory[_id].length;
   }
-  
 }
