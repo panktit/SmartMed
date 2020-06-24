@@ -3,7 +3,6 @@ import React from "react";
 import { Button } from "reactstrap";
 import { Link } from "react-router-dom";
 import axios from 'axios';
-import "../assets/scss/signuplogin.scss";
 import loginImg from "../assets/img/login.png";
 import TransparentFooter from "./Footers/TransparentFooter.js";
 import ExamplesNavbar from "./Navbars/ExamplesNavbar";
@@ -79,7 +78,7 @@ class LoginPage extends React.Component {
                   className="submit-btn"
                   color="info"
                 >
-                  Login
+                  LOGIN
                 </Button><br/><br/>
                 <p>New to SmartMed? <Link to="/register">Register</Link></p>
                 </div>

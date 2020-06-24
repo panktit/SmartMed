@@ -1,0 +1,21 @@
+@import 'dashboard/variables';
+@import 'dashboard/mixins';
+
+
+// Core CSS
+@import "dashboard/buttons";
+@import "dashboard/inputs";
+@import "dashboard/misc";
+
+// components
+@import "dashboard/navbar";
+@import "dashboard/outline";
+@import "dashboard/tables";
+@import "dashboard/sidebar-and-main-panel";
+@import "dashboard/footers";
+@import "dashboard/cards";
+
+@import "dashboard/responsive";
+
+// react
+@import "dashboard/react/react-differences";

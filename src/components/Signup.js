@@ -2,7 +2,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "reactstrap";
-import "../assets/scss/signuplogin.scss";
 import loginImg from "../assets/img/login.png";
 import axios from 'axios';
 import TransparentFooter from "./Footers/TransparentFooter.js";
@@ -172,7 +171,7 @@ class SignupPage extends React.Component {
                   className="submit-btn"
                   color="info"
                 >
-                  Register
+                  REGISTER
                 </Button><br/><br/>
                 <p>Already have an account? <Link to="/login">Log in</Link></p>
                 </div>

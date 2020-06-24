@@ -2,7 +2,7 @@ import React from 'react';
 
 const NotFound = () =>
   <div style={{"padding": "40px 15px", "text-align": "center"}}>
-    <img alt="..." src={require("../assets/img/tsmfavicon.png")}></img>
+    <img alt="..." src={require("../assets/img/smfavicon.png")}></img>
     <h3>SmartMed</h3>
     <h1>Oops!</h1>
     <h2>404 Not Found</h2>

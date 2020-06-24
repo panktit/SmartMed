@@ -2,7 +2,7 @@ import React from 'react';
 
 // reactstrap components
 import { Card, CardHeader, CardBody, Row, Col } from "reactstrap";
-import PanelHeader from "../../PanelHeader.jsx";
+import PanelHeader from "../../Headers/PanelHeader.jsx";
 import Sidebar from "../../Sidebar/RecordSidebar";
 import DashboardNavbar from "../../Navbars/DashboardNavbar";
 import DashboardFooter from "../../Footers/DashboardFooter";

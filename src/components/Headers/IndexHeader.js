@@ -37,7 +37,7 @@ function IndexHeader() {
             <img
               alt="..."
               className="n-logo"
-              src={require("../../assets/img/tsmfavicon.png")}
+              src={require("../../assets/img/smfavicon.png")}
             ></img>
             <h1 className="h1-seo">SmartMed</h1>
             <h3>Smarter Way to store Medical Records</h3>

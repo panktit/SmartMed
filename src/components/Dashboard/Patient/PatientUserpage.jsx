@@ -17,7 +17,7 @@ import {
 } from "reactstrap";
 
 // core components
-import PanelHeader from "../../PanelHeader.jsx";
+import PanelHeader from "../../Headers/PanelHeader.jsx";
 import Sidebar from "../../Sidebar/PatientSidebar";
 import DashboardNavbar from "../../Navbars/DashboardNavbar";
 import DashboardFooter from "../../Footers/DashboardFooter";

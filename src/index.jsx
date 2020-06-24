@@ -3,17 +3,14 @@ import ReactDOM from "react-dom";
 import { Router, Route, Switch } from "react-router-dom";
 import { createBrowserHistory } from 'history';
 
-// styles for this kit
+// styles
 
 import "./assets/css/bootstrap.min.css";
-import "./assets/css/demo.css";
-import "./assets/scss/now-ui-kit.scss";
-import "./assets/scss/now-ui-dashboard.scss?v1.2.0";
-import "./assets/demo/demo.css";
-import "./assets/demo/nucleo-icons-page-styles.css";
+import "./assets/scss/main.scss";
+import "./assets/scss/dashboard.scss";
 import * as serviceWorker from "./registerServiceWorker";
 
-// pages for this kit
+// pages
 import Index from "./components/Index.js";
 import LoginIndex from "./components/LoginIndex.js";
 import LoginPage from "./components/Login.js";

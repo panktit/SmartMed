@@ -4,7 +4,7 @@ import { Nav } from "reactstrap";
 // javascript plugin used to create scrollbars on windows
 import PerfectScrollbar from "perfect-scrollbar";
 
-import logo from "../../assets/img/tsmfavicon.png";
+import logo from "../../assets/img/smfavicon.png";
 
 var ps;
 let patientId = "";
