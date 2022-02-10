@@ -33,7 +33,7 @@
     "mongoose": "^5.9.3",
     "morgan": "^1.9.1",
     "node-pre-gyp": "^0.14.0",
-    "node-sass": "^4.13.1",
+    "node-sass": "^7.0.0",
     "nouislider": "^14.1.1",
     "perfect-scrollbar": "^1.5.0",
     "quick-encrypt": "^1.0.8",
